@@ -3,7 +3,12 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/mouse.h>
 #include <dt-bindings/zmk/pointing.h>
+#include <input/processors.dtsi>
 #include <behaviors/rgbled_widget.dtsi>
+#include <mouse-gesture.dtsi>
+
+#define DEFAULT 0
+#define GESTURE 1
 
 / {
     keymap {
@@ -11,7 +16,13 @@
 
         default_layer {
             bindings = <
-                &bt BT_NXT  &mkp LCLK  &mkp MB3  &mkp RCLK
+                &bt BT_NXT  &mkp LCLK  &mo GESTURE  &mkp RCLK
+            >;
+        };
+
+        gesture_layer {
+            bindings = <
+                &trans  &trans  &trans  &trans
             >;
         };
     };
@@ -22,7 +33,31 @@
         combo_bt_clear {
             bindings = <&bt BT_CLR>;
             key-positions = <0 3>;
-            timeout-ms = <50>;
+            timeout-ms = <50>;  // default: 50
         };
+    };
+};
+
+&zip_mouse_gesture {
+    stroke-size = <200>;  // default: 200
+    enable-eager-mode;
+    always-active;
+    gesture-cooldown-ms = <200>;  // default: 500
+
+    back {
+        pattern = <GESTURE_RIGHT>;
+        bindings = <&kp LG(LBKT)>;
+    };
+
+    forward {
+        pattern = <GESTURE_LEFT>;
+        bindings = <&kp LG(RBKT)>;
+    };
+};
+
+&trackball_listener {
+    gesture {
+        layers = <GESTURE>;
+        input-processors = <&zip_mouse_gesture &zip_x_scaler 0 1 &zip_xy_to_scroll_mapper &zip_scroll_scaler 1 32>;
     };
 };

@@ -4,6 +4,8 @@ manifest:
       url-base: https://github.com/zmkfirmware
     - name: caksoylar
       url-base: https://github.com/caksoylar
+    - name: kot149
+      url-base: https://github.com/kot149
   projects:
     - name: zmk
       remote: zmkfirmware
@@ -12,5 +14,8 @@ manifest:
     - name: zmk-rgbled-widget
       remote: caksoylar
       revision: 9cef5af88c26e4b86a2a448160055dc740c14d6f  # pinned 2026-05-30
+    - name: zmk-mouse-gesture
+      remote: kot149
+      revision: 5c86049f5da433ee603fdd14204681d5fa1b5eef  # pinned 2026-05-30 (branch v1 head)
   self:
     path: config

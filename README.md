@@ -12,15 +12,34 @@ A 4-key Bluetooth/USB keyboard with a PMW3610 trackball, built on the Seeed XIAO
 |:-|:-|
 | Key 0 | Switch Bluetooth connection (cycle through 1 → 2 → 3) |
 | Key 1 | Left click |
-| Key 2 | Middle click |
+| Key 2 | Hold: gesture layer |
 | Key 3 | Right click |
 | Key 0 + Key 3 | Clear current Bluetooth pairing |
 
 The trackball provides pointer movement (400 CPI, smart-mode enabled).
 
+### Gesture Layer (hold Key 2)
+
+Hold **Key 2** and flick the trackball left or right to trigger a browser gesture
+(powered by [`zmk-mouse-gesture`](https://github.com/kot149/zmk-mouse-gesture)), or move
+it up/down to scroll. The cursor stays still while held (movement is converted to scroll
+or zeroed). Key 2 is hold-only; it sends no middle click. Bindings target Chrome on
+macOS:
+
+| Trackball | Action |
+|:-|:-|
+| ← | Forward (⌘]) |
+| → | Back (⌘[) |
+| ↑ / ↓ | Scroll up / down |
+
+Vertical scroll comes from `&zip_x_scaler 0 1` (zeroes the horizontal axis) feeding
+`&zip_xy_to_scroll_mapper`, so only up/down scrolls. Edit the `&zip_mouse_gesture` node
+and the `&trackball_listener` `gesture` block in
+`config/boards/shields/kimi/kimiboard.keymap` to change gestures, scrolling, or bindings.
+
 ## Building
 
-This config pins its upstream dependencies (ZMK and `zmk-rgbled-widget`) to fixed commits in `config/west.yml` for reproducible builds. See [Updating pinned versions](#updating-pinned-versions) to move to newer commits.
+This config pins its upstream dependencies (ZMK, `zmk-rgbled-widget`, and `zmk-mouse-gesture`) to fixed commits in `config/west.yml` for reproducible builds. See [Updating pinned versions](#updating-pinned-versions) to move to newer commits.
 
 ### GitHub Actions (CI)
 
@@ -42,7 +61,7 @@ brew install colima docker devcontainer
 
 #### Setup
 
-First clone this repository, then read the pinned SHAs from its manifest into shell variables. The SHAs are the single source of truth and live as the `revision` values in `config/west.yml` (the `zmk` and `zmk-rgbled-widget` projects):
+First clone this repository, then read the pinned SHAs from its manifest into shell variables. The SHAs are the single source of truth and live as the `revision` values in `config/west.yml` (the `zmk`, `zmk-rgbled-widget`, and `zmk-mouse-gesture` projects):
 
 ```bash
 git clone https://github.com/susumuota/zmk-config-KimiBoard.git
@@ -52,6 +71,9 @@ echo "ZMK_REV: $ZMK_REV"
 
 RGBLED_REV=$(awk '/name: zmk-rgbled-widget/{f=1} f&&/revision:/{print $2; exit}' zmk-config-KimiBoard/config/west.yml)
 echo "RGBLED_REV: $RGBLED_REV"
+
+MOUSEGESTURE_REV=$(awk '/name: zmk-mouse-gesture/{f=1} f&&/revision:/{print $2; exit}' zmk-config-KimiBoard/config/west.yml)
+echo "MOUSEGESTURE_REV: $MOUSEGESTURE_REV"
 ```
 
 Then clone the ZMK firmware source and extra modules, checking out those same pinned commits so local builds match CI:
@@ -63,6 +85,9 @@ cd zmk && git checkout "$ZMK_REV" && cd ..
 mkdir -p zmk-modules
 git clone https://github.com/caksoylar/zmk-rgbled-widget.git zmk-modules/zmk-rgbled-widget
 cd zmk-modules/zmk-rgbled-widget && git checkout "$RGBLED_REV" && cd ../..
+
+git clone https://github.com/kot149/zmk-mouse-gesture.git zmk-modules/zmk-mouse-gesture
+cd zmk-modules/zmk-mouse-gesture && git checkout "$MOUSEGESTURE_REV" && cd ../..
 ```
 
 Start colima and create Docker volumes to mount the config and modules into the container. The `colima start` flags allocate 2 CPUs (`-c 2`), 4GB RAM (`-m 4`), and a 100GB disk (`-d 100`), and use the macOS `vz` virtualization backend (`-t vz`).
@@ -83,6 +108,8 @@ Start the Dev Container and open a shell:
 
 ```bash
 devcontainer up --workspace-folder "$(pwd)/zmk"
+docker ps -a
+
 devcontainer exec --workspace-folder "$(pwd)/zmk" bash
 ```
 
@@ -108,7 +135,7 @@ Main firmware:
 west build -p -d build/main -b xiao_ble//zmk -- \
   -DSHIELD="kimiboard rgbled_adapter" \
   -DZMK_CONFIG="/workspaces/zmk-config/config" \
-  -DZMK_EXTRA_MODULES="/workspaces/zmk-modules/zmk-rgbled-widget" \
+  -DZMK_EXTRA_MODULES="/workspaces/zmk-modules/zmk-rgbled-widget;/workspaces/zmk-modules/zmk-mouse-gesture" \
   -DSNIPPET=studio-rpc-usb-uart \
   -DCONFIG_ZMK_STUDIO=y \
   -DCONFIG_ZMK_STUDIO_LOCKING=n \
@@ -187,8 +214,9 @@ To move the pinned dependencies to newer upstream commits:
 ```bash
 git ls-remote https://github.com/zmkfirmware/zmk.git refs/heads/main
 git ls-remote https://github.com/caksoylar/zmk-rgbled-widget.git refs/heads/main
+git ls-remote https://github.com/kot149/zmk-mouse-gesture.git refs/heads/v1
 ```
 
-2. Update the two `revision` values in `config/west.yml`.
+2. Update the three `revision` values in `config/west.yml`.
 3. Update the workflow ref in `.github/workflows/build.yml` to the same SHA as the `zmk` revision — these must stay in sync.
 4. Commit the changes.
