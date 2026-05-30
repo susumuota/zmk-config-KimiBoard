@@ -2,5 +2,5 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
-    # pinned 2026-05-30; keep in sync with the zmk revision in config/west.yml
+    # pinned 2026-05-30 (branch main head); keep in sync with the zmk revision in config/west.yml
     uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@ed56d81db79cf3a6e5dc02697277c0fad880ad34
