@@ -1,4 +1,4 @@
-if KIMI
+if KIMIBOARD
 config ZMK_KEYBOARD_NAME
     default "kimi"
 endif

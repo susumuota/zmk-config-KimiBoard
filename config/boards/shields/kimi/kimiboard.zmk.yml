@@ -2,7 +2,8 @@ file_format: "1"
 id: kimi
 name: kimiboard
 type: shield
-url:
-requires: [seeeduino_xiao_ble]
+url: https://github.com/susumuota/zmk-config-KimiBoard
+requires: [xiao_ble]
 features:
   - keys
+  - pointing
