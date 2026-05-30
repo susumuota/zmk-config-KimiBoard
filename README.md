@@ -20,6 +20,8 @@ The trackball provides pointer movement (400 CPI, smart-mode enabled).
 
 ## Building
 
+This config pins its upstream dependencies (ZMK and `zmk-rgbled-widget`) to fixed commits in `config/west.yml` for reproducible builds. See [Updating pinned versions](#updating-pinned-versions) to move to newer commits.
+
 ### GitHub Actions (CI)
 
 Firmware is built automatically via GitHub Actions on push or pull request. Download the `.uf2` artifacts from the Actions run page.
@@ -40,17 +42,30 @@ brew install colima docker devcontainer
 
 #### Setup
 
-Clone this repository, the ZMK firmware source, and extra modules:
+First clone this repository, then read the pinned SHAs from its manifest into shell variables. The SHAs are the single source of truth and live as the `revision` values in `config/west.yml` (the `zmk` and `zmk-rgbled-widget` projects):
 
 ```bash
 git clone https://github.com/susumuota/zmk-config-KimiBoard.git
+
+ZMK_REV=$(awk '/name: zmk$/{f=1} f&&/revision:/{print $2; exit}' zmk-config-KimiBoard/config/west.yml)
+echo "ZMK_REV: $ZMK_REV"
+
+RGBLED_REV=$(awk '/name: zmk-rgbled-widget/{f=1} f&&/revision:/{print $2; exit}' zmk-config-KimiBoard/config/west.yml)
+echo "RGBLED_REV: $RGBLED_REV"
+```
+
+Then clone the ZMK firmware source and extra modules, checking out those same pinned commits so local builds match CI:
+
+```bash
 git clone https://github.com/zmkfirmware/zmk.git
+cd zmk && git checkout "$ZMK_REV" && cd ..
 
 mkdir -p zmk-modules
 git clone https://github.com/caksoylar/zmk-rgbled-widget.git zmk-modules/zmk-rgbled-widget
+cd zmk-modules/zmk-rgbled-widget && git checkout "$RGBLED_REV" && cd ../..
 ```
 
-Start colima and create Docker volumes to mount the config and modules into the container:
+Start colima and create Docker volumes to mount the config and modules into the container. The `colima start` flags allocate 2 CPUs (`-c 2`), 4GB RAM (`-m 4`), and a 100GB disk (`-d 100`), and use the macOS `vz` virtualization backend (`-t vz`).
 
 ```bash
 colima start -c 2 -m 4 -d 100 -t vz
@@ -132,26 +147,48 @@ cp -X zmk-config-KimiBoard/firmware/kimiboard_rgbled_adapter-xiao_ble__zmk-zmk.u
 Stop the Dev Container and remove Docker volumes:
 
 ```bash
-docker ps
+docker ps -a
 docker stop <container_id>
 docker rm <container_id>
+docker ps -a
 ```
 
 Remove Docker volumes created by the setup and the Dev Container:
 
 ```bash
+docker volume ls
 docker volume rm zmk-config zmk-modules \
   zmk-root-user zmk-zephyr zmk-zephyr-modules zmk-zephyr-tools
+docker volume ls
 ```
 
 Stop colima:
 
 ```bash
+colima status
 colima stop
+colima status
 ```
 
 To also delete the colima VM:
 
 ```bash
+colima list
 colima delete
+colima list
 ```
+
+### Updating pinned versions
+
+To move the pinned dependencies to newer upstream commits:
+
+1. Find the SHAs you want. For the latest `main` of each:
+
+```bash
+git ls-remote https://github.com/zmkfirmware/zmk.git refs/heads/main
+git ls-remote https://github.com/caksoylar/zmk-rgbled-widget.git refs/heads/main
+```
+
+2. Update the two `revision` values in `config/west.yml`.
+3. Update the workflow ref in `.github/workflows/build.yml` to the same SHA as the `zmk` revision — these must stay in sync.
+4. Commit the changes.

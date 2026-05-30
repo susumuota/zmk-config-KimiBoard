@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-ZMK firmware configuration for **KimiBoard** — a custom 4-key keyboard with a PMW3610 trackball, running on a Seeed XIAO BLE (nRF52840). Uses `zmk-rgbled-widget` for status indication. Build and flash instructions are in the README.
+ZMK firmware configuration for **KimiBoard** — a custom 4-key keyboard with a PMW3610 trackball, running on a Seeed XIAO BLE (nRF52840). Uses `zmk-rgbled-widget` for status indication. Build and flash instructions are in the README. Upstream dependencies are pinned to fixed SHAs; see "Updating pinned versions" in the README to bump them.
 
 ## Caveats
 
