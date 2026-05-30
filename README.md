@@ -8,34 +8,53 @@ A 4-key Bluetooth/USB keyboard with a PMW3610 trackball, built on the Seeed XIAO
 
 ## Default Keymap
 
-| Key | Assignment |
-|:-|:-|
-| Key 0 | Switch Bluetooth connection (cycle through 1 → 2 → 3) |
-| Key 1 | Left click |
-| Key 2 | Hold: gesture layer |
-| Key 3 | Right click |
-| Key 0 + Key 3 | Clear current Bluetooth pairing |
+Keys 2 and 3 are hold-taps (`mo_mkp`, tap-preferred, 200 ms): a quick tap sends a mouse
+click, while holding activates a momentary gesture layer.
 
-The trackball provides pointer movement (400 CPI, smart-mode enabled).
+| Key | Tap | Hold (≥200 ms) |
+|:-|:-|:-|
+| Key 0 | Switch Bluetooth connection (cycle through 1 → 2 → 3) | — |
+| Key 1 | Left click | — |
+| Key 2 | Middle click | Scroll + browser-gesture layer |
+| Key 3 | Right click | Window-management gesture layer |
 
-### Gesture Layer (hold Key 2)
+**Key 0 + Key 3** (combo) clears the current Bluetooth pairing.
 
-Hold **Key 2** and flick the trackball left or right to trigger a browser gesture
-(powered by [`zmk-mouse-gesture`](https://github.com/kot149/zmk-mouse-gesture)), or move
-it up/down to scroll. The cursor stays still while held (movement is converted to scroll
-or zeroed). Key 2 is hold-only; it sends no middle click. Bindings target Chrome on
-macOS:
+The trackball provides pointer movement (600 CPI, smart-mode enabled).
+
+### Scroll & browser gestures (hold Key 2)
+
+Hold **Key 2** to enter the scroll layer. The cursor stays still (the horizontal axis is
+zeroed); move the trackball up/down to scroll, or flick left/right to trigger a browser
+gesture (powered by [`zmk-mouse-gesture`](https://github.com/kot149/zmk-mouse-gesture)).
+Bindings target Chrome on macOS:
 
 | Trackball | Action |
 |:-|:-|
-| ← | Forward (⌘]) |
-| → | Back (⌘[) |
+| ← flick | Forward (⌘]) |
+| → flick | Back (⌘[) |
 | ↑ / ↓ | Scroll up / down |
 
-Vertical scroll comes from `&zip_x_scaler 0 1` (zeroes the horizontal axis) feeding
-`&zip_xy_to_scroll_mapper`, so only up/down scrolls. Edit the `&zip_mouse_gesture` node
-and the `&trackball_listener` `gesture` block in
-`config/boards/shields/kimi/kimiboard.keymap` to change gestures, scrolling, or bindings.
+Scroll is produced by `&zip_x_scaler 0 1` (zeroes the horizontal axis) feeding
+`&zip_xy_to_scroll_mapper`, then `&zip_scroll_scaler (-1) 32` inverts and scales it, so
+only up/down scrolls.
+
+### Window-management gestures (hold Key 3)
+
+Hold **Key 3** to enter the rectangle layer. All trackball movement is zeroed (the cursor
+stays still); flick the trackball to trigger a macOS window-manager
+([Rectangle.app](https://rectangleapp.com/)) shortcut:
+
+| Trackball | Action | Shortcut |
+|:-|:-|:-|
+| ← flick | Left third | ⌃⌥D |
+| → flick | Right two-thirds | ⌃⌥T |
+| ↑ flick | Maximize | ⌃⌥⏎ |
+| ↓ flick | Restore | ⌃⌥⌫ |
+
+To change gestures, scrolling, or bindings, edit the `&zip_mouse_gesture` (browser) and
+`zip_mouse_gesture_rect` (window management) nodes and the `scroll` / `rectangle` blocks
+under `&trackball_listener` in `config/boards/shields/kimi/kimiboard.keymap`.
 
 ## Building
 

@@ -6,6 +6,8 @@ ZMK firmware configuration for **KimiBoard** — a custom 4-key keyboard with a 
 
 ## Caveats
 
-- **Keymap position order is reversed from physical order**: the matrix transform maps SW4=0, SW3=1, SW2=2, SW1=3. Combo `key-positions` use this order.
-- **Trackball axes are intentionally swapped**: sensor X → cursor Y, sensor Y → cursor X (due to physical mounting orientation). Only sensor X is inverted.
+- **Keymap position order is reversed from physical order**: the matrix transform maps SW4=0 (reset), SW3=1, SW2=2, SW1=3. Combo `key-positions` use this order.
+- **Keys 2 & 3 are hold-taps** (`mo_mkp`, tap-preferred, 200 ms): tap = mouse click (middle / right), hold = momentary gesture layer (`SCROLL` / `RECTANGLE`).
+- **Two independent gesture nodes**: `&zip_mouse_gesture` (browser back/forward, active on the SCROLL layer) and `zip_mouse_gesture_rect` (Rectangle.app window management, active on the RECTANGLE layer).
+- **Trackball**: 600 CPI, smart-mode. Axes are intentionally swapped — sensor X → cursor Y, sensor Y → cursor X (due to physical mounting orientation), and only sensor X is inverted. The SCROLL layer inverts scroll direction (`&zip_scroll_scaler (-1) 32`).
 - **ZMK Studio physical layout**: defined in `.overlay` only. Studio uses this to render the keyboard visually.
