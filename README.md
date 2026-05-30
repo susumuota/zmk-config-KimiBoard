@@ -20,8 +20,138 @@ The trackball provides pointer movement (400 CPI, smart-mode enabled).
 
 ## Building
 
+### GitHub Actions (CI)
+
 Firmware is built automatically via GitHub Actions on push or pull request. Download the `.uf2` artifacts from the Actions run page.
 
 Two firmware images are produced:
 - **kimiboard** — main firmware with ZMK Studio support
 - **settings_reset** — utility firmware to reset stored settings
+
+### Local Build (macOS + colima + Dev Container)
+
+Based on the ZMK [Container Setup](https://zmk.dev/docs/development/local-toolchain/setup/container) and [Build & Flash](https://zmk.dev/docs/development/build-flash) documentation.
+
+#### Prerequisites
+
+```bash
+brew install colima docker devcontainer
+```
+
+#### Setup
+
+Clone this repository, the ZMK firmware source, and extra modules:
+
+```bash
+git clone https://github.com/susumuota/zmk-config-KimiBoard.git
+git clone https://github.com/zmkfirmware/zmk.git
+
+mkdir -p zmk-modules
+git clone https://github.com/caksoylar/zmk-rgbled-widget.git zmk-modules/zmk-rgbled-widget
+```
+
+Start colima and create Docker volumes to mount the config and modules into the container:
+
+```bash
+colima start -c 2 -m 4 -d 100 -t vz
+
+docker volume create --driver local -o o=bind -o type=none \
+  -o device="$(pwd)/zmk-config-KimiBoard" zmk-config
+
+docker volume create --driver local -o o=bind -o type=none \
+  -o device="$(pwd)/zmk-modules" zmk-modules
+
+docker volume ls
+```
+
+Start the Dev Container and open a shell:
+
+```bash
+devcontainer up --workspace-folder "$(pwd)/zmk"
+devcontainer exec --workspace-folder "$(pwd)/zmk" bash
+```
+
+Inside the container, initialize the Zephyr workspace:
+
+```bash
+west init -l app/
+west update
+```
+
+#### Build
+
+Run from the `app/` directory inside the container:
+
+```bash
+cd app
+mkdir -p /workspaces/zmk-config/firmware
+```
+
+Main firmware:
+
+```bash
+west build -p -d build/main -b xiao_ble//zmk -- \
+  -DSHIELD="kimiboard rgbled_adapter" \
+  -DZMK_CONFIG="/workspaces/zmk-config/config" \
+  -DZMK_EXTRA_MODULES="/workspaces/zmk-modules/zmk-rgbled-widget" \
+  -DSNIPPET=studio-rpc-usb-uart \
+  -DCONFIG_ZMK_STUDIO=y \
+  -DCONFIG_ZMK_STUDIO_LOCKING=n \
+  && cp -p build/main/zephyr/zmk.uf2 \
+    /workspaces/zmk-config/firmware/kimiboard_rgbled_adapter-xiao_ble__zmk-zmk.uf2
+```
+
+Settings reset firmware:
+
+```bash
+west build -p -d build/reset -b xiao_ble//zmk -- \
+  -DSHIELD=settings_reset \
+  -DZMK_CONFIG="/workspaces/zmk-config/config" \
+  && cp -p build/reset/zephyr/zmk.uf2 \
+    /workspaces/zmk-config/firmware/settings_reset-xiao_ble__zmk-zmk.uf2
+```
+
+#### Flash
+
+Put the board into bootloader mode (double-tap reset), then from a separate terminal on the host. The `-X` flag is macOS only and prevents extended attribute errors with UF2 mass storage.
+
+Flash the settings reset firmware first:
+
+```bash
+cp -X zmk-config-KimiBoard/firmware/settings_reset-xiao_ble__zmk-zmk.uf2 /Volumes/XIAO-SENSE/
+```
+
+Put the board into bootloader mode again, then flash the main firmware:
+
+```bash
+cp -X zmk-config-KimiBoard/firmware/kimiboard_rgbled_adapter-xiao_ble__zmk-zmk.uf2 /Volumes/XIAO-SENSE/
+```
+
+#### Cleanup
+
+Stop the Dev Container and remove Docker volumes:
+
+```bash
+docker ps
+docker stop <container_id>
+docker rm <container_id>
+```
+
+Remove Docker volumes created by the setup and the Dev Container:
+
+```bash
+docker volume rm zmk-config zmk-modules \
+  zmk-root-user zmk-zephyr zmk-zephyr-modules zmk-zephyr-tools
+```
+
+Stop colima:
+
+```bash
+colima stop
+```
+
+To also delete the colima VM:
+
+```bash
+colima delete
+```
