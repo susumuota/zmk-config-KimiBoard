@@ -5,86 +5,24 @@
 #include <dt-bindings/zmk/pointing.h>
 #include <behaviors/rgbled_widget.dtsi>
 
-&trackball {
-    automouse-layer = <2>;
-    scroll-layers = <3>;
-};
-
-
 / {
     keymap {
         compatible = "zmk,keymap";
 
         default_layer {
             bindings = <
-                // row0左から右へ（一番左のキーはリセットボタン）
-                &bt BT_NXT  &kp BACKSPACE  &kp SPACE  &kp ENTER
+                &bt BT_NXT  &mkp LCLK  &mkp MB3  &mkp RCLK
             >;
-	};
-
-    mouse_key_layer {
-            bindings = <
-                &trans  &mkp MB3  &mkp LCLK  &mkp RCLK
-        >;
-    };
-
-    auto_mouse_layer {
-            bindings = <
-                &trans  &mkp MB3  &mkp LCLK  &mkp RCLK
-        >;
-    };
-
-    scroll_layer {
-            bindings = <
-                &trans  &trans  &trans  &trans
-        >;
-    };
-    
-
-
+        };
     };
 
     combos {
         compatible = "zmk,combos";
 
-        // Key1 + 2 = (□ - ■ ■ □)
-            // タップでLANGUAGE_2へ切り替え
-			// ホールドでスクロールレイヤー
-
-        combo_layer1 {
-            bindings = <&lt 3 LANGUAGE_2>;
-            key-positions = <1 2>;
-            timeout-ms = <50>;
-        };
-        
-        // Key2 + 3 = (□ - □ ■ ■)
-			// タップでLANGUAGE_1へ切り替え
-
-        combo_layer2 {
-            bindings = <&kp LANGUAGE_1>;
-            key-positions = <2 3>;
-            timeout-ms = <50>;
-        };
-
-        // Key1 + 3 = (□ -  ■ □ ■)
-			// 1番レイヤーをトグル(マウス操作限定レイヤー)
-
-        combo_layer4 {
-            bindings = <&tog 1>;
-            key-positions = <1 3>;
-            timeout-ms = <50>;
-        };
-
-		// Key1 + 3 = (■ -  □ □　■)
-			// 現在の接続先のBT接続情報を消去
-
-        combo_layer7 {
+        combo_bt_clear {
             bindings = <&bt BT_CLR>;
             key-positions = <0 3>;
             timeout-ms = <50>;
         };
-
-
     };
-
 };

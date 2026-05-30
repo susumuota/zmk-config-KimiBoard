@@ -1,52 +1,27 @@
-# KimiBoardのファームウェアについて
-<img width="1920" height="1080" alt="Kimiboard_スイッチ部分説明画像" src="https://github.com/user-attachments/assets/21cd87cc-cafe-45ed-b6bb-a46061c3a2e3" />
-<img width="1920" height="1080" alt="KimiBoard_キーマップ" src="https://github.com/user-attachments/assets/558c7499-c5b9-4ee5-af3a-d8d39db75c29" />
+# ZMK Config for KimiBoard
 
-- [1.デフォルトファームウェアについて](#1デフォルトファームウェアについて)
-  - [1-1. キーマップ](#1-1キーマップ)
-  - [1-2. オートマウスレイヤー](#1-2オートマウスレイヤー)
+<img width="1920" height="1080" alt="KimiBoard switches" src="https://github.com/user-attachments/assets/21cd87cc-cafe-45ed-b6bb-a46061c3a2e3" />
 
+A 4-key Bluetooth/USB keyboard with a PMW3610 trackball, built on the Seeed XIAO BLE (nRF52840). Supports up to 3 Bluetooth pairings and includes an RGB LED status widget.
 
+[ZMK Studio](https://zmk.studio/) is enabled, allowing keymap customization without reflashing.
 
-## 1.デフォルトファームウェアについて 
->[!NOTE]
->**・Windows・Mac上の言語設定の1と2を直接指定し、日本語・英語入力の切り替えを行う形でキーを割り当てています。**
+## Default Keymap
 
-### 1-1.キーマップ  
-
-####  通常のキーマップ  
-
-| キー | 割り当て |
+| Key | Assignment |
 |:-|:-|
-| 0キー| Bluetooth接続先変更（1→2→3のトグル） |
-| 1キー| バックスペースキー|
-| 2キー| スペースキー |
-| 3キー| エンターキー |
-| 1キー + 2キー| 英数入力（言語設定2） |
-| 2キー + 3キー| かな入力（言語設定1） |
-| 1キー + 3キー| マウスボタンモードに切り替え（通常のキーマップとのトグル） |
-| 0キー + 3キー| 現在のBluetooth接続先情報を削除 |
+| Key 0 | Switch Bluetooth connection (cycle through 1 → 2 → 3) |
+| Key 1 | Left click |
+| Key 2 | Middle click |
+| Key 3 | Right click |
+| Key 0 + Key 3 | Clear current Bluetooth pairing |
 
-####  マウスボタンモードのキーマップ  
+The trackball provides pointer movement (400 CPI, smart-mode enabled).
 
-| キー | 割り当て |
-|:-|:-|
-| 0キー| Bluetooth接続先変更（1→2→3のトグル） |
-| 1キー| ホイールクリック|
-| 2キー| 左クリック |
-| 3キー| 右クリック |
-| 1キー + 2キー| 英数入力（言語設定2） |
-| 2キー + 3キー| かな入力（言語設定1） |
-| 1キー + 3キー| 通常のキーマップに切り替え（マウスボタンモードとのトグル） |
-| 0キー + 3キー| 現在のBluetooth接続先情報を削除 |
+## Building
 
-### 1-2.オートマウスレイヤー  
+Firmware is built automatically via GitHub Actions on push or pull request. Download the `.uf2` artifacts from the Actions run page.
 
-####  オートマウスレイヤー中のキーマップ  
-
-| キー | 割り当て |
-|:-|:-|
-| 0キー| Bluetooth接続先変更（1→2→3のトグル） |
-| 1キー| ホイールクリック|
-| 2キー| 左クリック |
-| 3キー| 右クリック |
+Two firmware images are produced:
+- **kimiboard** — main firmware with ZMK Studio support
+- **settings_reset** — utility firmware to reset stored settings
