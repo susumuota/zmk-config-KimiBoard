@@ -18,17 +18,17 @@ Each key has a tap action, and Keys 2 and 3 are hold-taps (200 ms) that add a ho
 
 | Key | Tap | Hold (≥200 ms) |
 |:-|:-|:-|
-| Key 0 | Switch Bluetooth connection (cycle through 1 → 2 → 3) | — |
-| Key 1 | Left click | — |
-| Key 2 | Middle click | Scroll & Navigate gesture layer |
-| Key 3 | Right click | Spaces & Mission Control gesture layer, or Rectangle gesture layer when Rectangle override is on |
+| 0 | Switch Bluetooth connection (cycle through 1 → 2 → 3) | — |
+| 1 | Left click | — |
+| 2 | Middle click | Scroll & Navigate gesture layer |
+| 3 | Right click | Spaces & Mission Control gesture layer, or Rectangle gesture layer when Rectangle override is on |
 
 Pressing two keys together triggers a combo:
 
 | Combo | Action |
 |:-|:-|
-| Key 0 + Key 3 | Clear the current Bluetooth pairing |
-| Key 2 + Key 3 | Toggle Rectangle override: switches Key 3 hold between the Spaces & Mission Control and Rectangle gesture layers |
+| 0 + 3 | Clear the current Bluetooth pairing |
+| 2 + 3 | Toggle Rectangle override: switches Key 3 hold between the Spaces & Mission Control and Rectangle gesture layers |
 
 ### Scroll & Navigate gestures (hold Key 2)
 
