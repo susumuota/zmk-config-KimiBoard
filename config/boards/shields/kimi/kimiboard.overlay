@@ -15,10 +15,10 @@
 
     keys = 
             //                     w    h    x     y   rot rx  ry
-             <&key_physical_attrs  50   100    0   0   0   0   0>   // SW4(リセット用ボタン)
-            , <&key_physical_attrs 100  100  120   0   0   0   0>   // SW3(左ボタン)
-            , <&key_physical_attrs 100  100  240   0   0   0   0>   // SW2(中央ボタン)
-            , <&key_physical_attrs 100  100  360   0   0   0   0>   // SW1(右ボタン)
+             <&key_physical_attrs  50   100    0   0   0   0   0>   // SW4 (reset button)
+            , <&key_physical_attrs 100  100  120   0   0   0   0>   // SW3 (left button)
+            , <&key_physical_attrs 100  100  240   0   0   0   0>   // SW2 (center button)
+            , <&key_physical_attrs 100  100  360   0   0   0   0>   // SW1 (right button)
             ;
     };
 
@@ -27,7 +27,7 @@
         rows = <4>;
         columns = <5>;
         map = <
-        RC(3,3) RC(2,2) RC(1,1) RC(0,0)    // SW4〜SW1(4はリセット用スイッチ)
+        RC(3,3) RC(2,2) RC(1,1) RC(0,0)    // SW4 to SW1 (SW4 is the reset switch)
         >;
     };
 
