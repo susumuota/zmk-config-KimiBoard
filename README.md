@@ -12,8 +12,7 @@ This repository is a fork of [sirocominfo/zmk-config-KimiBoard](https://github.c
 
 ## Default Keymap
 
-Keys 2 and 3 are hold-taps (`mo_mkp`, tap-preferred, 200 ms): a quick tap sends a mouse
-click, while holding activates a momentary gesture layer.
+Keys 2 and 3 are hold-taps (`mo_mkp`, tap-preferred, 200 ms): a quick tap sends a mouse click, while holding activates a momentary gesture layer.
 
 | Key | Tap | Hold (≥200 ms) |
 |:-|:-|:-|
@@ -30,10 +29,7 @@ The trackball provides pointer movement (600 CPI, smart-mode enabled).
 
 ### Scroll & forward/back gestures (hold Key 2)
 
-Hold **Key 2** to enter the scroll layer. The cursor stays still (the horizontal axis is
-zeroed); move the trackball up/down to scroll, or flick left/right to trigger a forward/back
-gesture (powered by [`zmk-mouse-gesture`](https://github.com/kot149/zmk-mouse-gesture)).
-Bindings target Chrome on macOS:
+Hold **Key 2** to enter the scroll layer. The cursor stays still (the horizontal axis is zeroed); move the trackball up/down to scroll, or flick left/right to trigger a forward/back gesture (powered by [`zmk-mouse-gesture`](https://github.com/kot149/zmk-mouse-gesture)). Bindings target Chrome on macOS:
 
 | Trackball | Action | Shortcut |
 |:-|:-|:-|
@@ -44,17 +40,11 @@ Bindings target Chrome on macOS:
 
 <img width="560" alt="Hold Key 2 and move the trackball: up = scroll down, down = scroll up, left flick = Forward (⌘]), right flick = Back (⌘[)" src="images/key2-scroll-gestures.svg" />
 
-Scroll is produced by `&zip_x_scaler 0 1` (zeroes the horizontal axis) feeding
-`&zip_xy_to_scroll_mapper`, then `&zip_scroll_scaler (-1) 32` inverts and scales it. The
-`-1` gives **macOS-style natural scrolling**: pushing the trackball up behaves like
-swiping two fingers up on a trackpad (the page content follows your finger), so the view
-scrolls down.
+Scroll is produced by `&zip_x_scaler 0 1` (zeroes the horizontal axis) feeding `&zip_xy_to_scroll_mapper`, then `&zip_scroll_scaler (-1) 32` inverts and scales it. The `-1` gives **macOS-style natural scrolling**: pushing the trackball up behaves like swiping two fingers up on a trackpad (the page content follows your finger), so the view scrolls down.
 
 ### Window-management gestures (hold Key 3)
 
-Hold **Key 3** to enter the rectangle layer. All trackball movement is zeroed (the cursor
-stays still); flick the trackball to trigger a macOS window-manager
-([Rectangle.app](https://rectangleapp.com/)) shortcut:
+Hold **Key 3** to enter the rectangle layer. All trackball movement is zeroed (the cursor stays still); flick the trackball to trigger a macOS window-manager ([Rectangle.app](https://rectangleapp.com/)) shortcut:
 
 | Trackball | Action | Shortcut |
 |:-|:-|:-|
@@ -65,13 +55,11 @@ stays still); flick the trackball to trigger a macOS window-manager
 
 <img width="560" alt="Hold Key 3 and flick the trackball: up = Maximize (⌃⌥⏎), down = Restore (⌃⌥⌫), left = Left third (⌃⌥D), right = Right two-thirds (⌃⌥T)" src="images/key3-window-gestures.svg" />
 
-To change gestures, scrolling, or bindings, edit the `zip_scroll_gesture` (scroll +
-forward/back) and `zip_rectangle_gesture` (window management) nodes and the `scroll` / `rectangle` blocks
-under `&trackball_listener` in `config/boards/shields/kimi/kimiboard.keymap`.
+To change gestures, scrolling, or bindings, edit the `zip_scroll_gesture` (scroll + forward/back) and `zip_rectangle_gesture` (window management) nodes and the `scroll` / `rectangle` blocks under `&trackball_listener` in [`config/boards/shields/kimi/kimiboard.keymap`](config/boards/shields/kimi/kimiboard.keymap).
 
 ## Building
 
-This config pins its upstream dependencies (ZMK, `zmk-rgbled-widget`, and `zmk-mouse-gesture`) to fixed commits in `config/west.yml` for reproducible builds. See [Updating pinned versions](#updating-pinned-versions) to move to newer commits.
+This config pins its upstream dependencies (ZMK, `zmk-rgbled-widget`, and `zmk-mouse-gesture`) to fixed commits in [`config/west.yml`](config/west.yml) for reproducible builds. See [Updating pinned versions](#updating-pinned-versions) to move to newer commits.
 
 ### GitHub Actions (CI)
 
@@ -93,7 +81,7 @@ brew install colima docker devcontainer
 
 #### Setup
 
-First clone this repository, then read the pinned SHAs from its manifest into shell variables. The SHAs are the single source of truth and live as the `revision` values in `config/west.yml` (the `zmk`, `zmk-rgbled-widget`, and `zmk-mouse-gesture` projects):
+First clone this repository, then read the pinned SHAs from its manifest into shell variables. The SHAs are the single source of truth and live as the `revision` values in [`config/west.yml`](config/west.yml) (the `zmk`, `zmk-rgbled-widget`, and `zmk-mouse-gesture` projects):
 
 ```bash
 git clone https://github.com/susumuota/zmk-config-KimiBoard.git
@@ -249,6 +237,6 @@ git ls-remote https://github.com/caksoylar/zmk-rgbled-widget.git refs/heads/main
 git ls-remote https://github.com/kot149/zmk-mouse-gesture.git refs/heads/v1
 ```
 
-2. Update the three `revision` values in `config/west.yml`.
-3. Update the workflow ref in `.github/workflows/build.yml` to the same SHA as the `zmk` revision — these must stay in sync.
+2. Update the three `revision` values in [`config/west.yml`](config/west.yml).
+3. Update the workflow ref in [`.github/workflows/build.yml`](.github/workflows/build.yml) to the same SHA as the `zmk` revision — these must stay in sync.
 4. Commit the changes.
