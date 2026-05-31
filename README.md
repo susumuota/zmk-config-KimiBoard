@@ -8,11 +8,13 @@ The KimiBoard is available for purchase at [sirocom's BOOTH shop](https://siroco
 
 ## Credits
 
-This repository is a fork of [sirocominfo/zmk-config-KimiBoard](https://github.com/sirocominfo/zmk-config-KimiBoard) by sirocominfo. Many thanks to the original author for the hardware design, base configuration, and the header photo.
+This ZMK config is a fork of [sirocominfo/zmk-config-KimiBoard](https://github.com/sirocominfo/zmk-config-KimiBoard) by sirocom. Many thanks to the original author for the hardware design, base configuration, and the header photo.
 
 ## Default Keymap
 
-Keys 2 and 3 are hold-taps (`mo_mkp`, tap-preferred, 200 ms): a quick tap sends a mouse click, while holding activates a momentary gesture layer.
+<img width="560" alt="Default keymap: Key 0 tap = Switch BT, Key 1 tap = Left click, Key 2 tap = Middle click / hold = Scroll layer, Key 3 tap = Right click / hold = Spaces & Mission Control or Rectangle layer, trackball moves the pointer; Key 0 + Key 3 clears Bluetooth pairing; Key 2 + Key 3 toggles Rectangle override" src="images/default-keymap.svg" />
+
+Each key has a tap action, and Keys 2 and 3 are hold-taps (200 ms) that add a hold action: a quick tap sends a mouse click, while holding activates a momentary gesture layer. In the diagram above, white pills are tap actions and blue pills are hold actions. On the default layer, the trackball moves the pointer.
 
 | Key | Tap | Hold (≥200 ms) |
 |:-|:-|:-|
@@ -21,17 +23,18 @@ Keys 2 and 3 are hold-taps (`mo_mkp`, tap-preferred, 200 ms): a quick tap sends 
 | Key 2 | Middle click | Scroll & Navigate gesture layer |
 | Key 3 | Right click | Spaces & Mission Control gesture layer, or Rectangle gesture layer when Rectangle override is on |
 
-<img width="560" alt="Default keymap: Key 0 tap = Switch BT, Key 1 tap = Left click, Key 2 tap = Middle click / hold = Scroll layer, Key 3 tap = Right click / hold = Spaces & Mission Control or Rectangle layer, trackball moves the pointer; Key 0 + Key 3 clears Bluetooth pairing; Key 2 + Key 3 toggles Rectangle override" src="images/default-keymap.svg" />
+Pressing two keys together triggers a combo:
 
-**Key 0 + Key 3** (combo) clears the current Bluetooth pairing.
-
-**Key 2 + Key 3** (combo) toggles Rectangle override mode. When Rectangle override is off, holding Key 3 enters the Spaces & Mission Control gesture layer. When Rectangle override is on, holding Key 3 enters the Rectangle gesture layer.
-
-The trackball provides pointer movement (600 CPI, smart-mode enabled).
+| Combo | Action |
+|:-|:-|
+| Key 0 + Key 3 | Clear the current Bluetooth pairing |
+| Key 2 + Key 3 | Toggle Rectangle override: switches Key 3 hold between the Spaces & Mission Control and Rectangle gesture layers |
 
 ### Scroll & Navigate gestures (hold Key 2)
 
-Hold **Key 2** to enter the scroll layer. The cursor stays still (the horizontal axis is zeroed); move the trackball up/down to scroll, or flick left/right to trigger a forward/back gesture (powered by [`zmk-mouse-gesture`](https://github.com/kot149/zmk-mouse-gesture)). Bindings target Chrome on macOS:
+<img width="560" alt="Hold Key 2 and move the trackball: up = scroll down, down = scroll up, left flick = Forward (⌘]), right flick = Back (⌘[)" src="images/key2-scroll-gestures.svg" />
+
+This layer emulates the macOS **two-finger trackpad gestures** with the trackball. Hold **Key 2** to enter the scroll layer. While held, the cursor stays still: move the trackball up or down to scroll the page, or flick left or right to navigate forward or back. The forward/back shortcuts target Chrome on macOS:
 
 | Trackball | Action | Shortcut |
 |:-|:-|:-|
@@ -40,49 +43,43 @@ Hold **Key 2** to enter the scroll layer. The cursor stays still (the horizontal
 | ← flick | Forward | ⌘] |
 | → flick | Back | ⌘[ |
 
-<img width="560" alt="Hold Key 2 and move the trackball: up = scroll down, down = scroll up, left flick = Forward (⌘]), right flick = Back (⌘[)" src="images/key2-scroll-gestures.svg" />
-
-Scroll is produced by `&zip_x_scaler 0 1` (zeroes the horizontal axis) feeding `&zip_xy_to_scroll_mapper`, then `&zip_scroll_scaler (-1) 32` inverts and scales it. The `-1` gives **macOS-style natural scrolling**: pushing the trackball up behaves like swiping two fingers up on a trackpad (the page content follows your finger), so the view scrolls down.
+The up/down mapping may look reversed, but it follows **macOS-style natural scrolling**: pushing the trackball up is like swiping two fingers up on a trackpad (the page content follows your finger), so the view scrolls down.
 
 ### Spaces & Mission Control gestures (hold Key 3)
 
-Hold **Key 3** to enter the selected right-hold layer. All trackball movement is zeroed (the cursor stays still); flick the trackball to trigger either a macOS Spaces & Mission Control shortcut or a macOS window-manager ([Rectangle.app](https://rectangleapp.com/)) shortcut. Use **Key 2 + Key 3** to toggle `RECTANGLE_OVERRIDE`, which changes Key 3 hold from Spaces & Mission Control gestures to Rectangle gestures without changing the right-click tap.
+<img width="560" alt="Hold Key 3 and flick the trackball: up = Mission Control (⌃↑), down = App Exposé (⌃↓), left = Move one Space right (⌃→), right = Move one Space left (⌃←)" src="images/key3-desktop-gestures.svg" />
+
+This layer emulates the macOS **three-finger trackpad gestures** with the trackball. By default, hold **Key 3** to enter it. While held, the cursor stays still: flick the trackball in any direction to trigger a macOS Spaces & Mission Control shortcut. Use the **Key 2 + Key 3** combo to switch Key 3 hold to the [Rectangle](#rectangle-window-management-gestures-hold-key-3) gestures instead.
 
 | Trackball | Action | Shortcut |
 |:-|:-|:-|
-| ↑ flick | Mission Control | ⌃↑ |
-| ↓ flick | App Exposé | ⌃↓ |
-| ← flick | Move one Space right | ⌃→ |
-| → flick | Move one Space left | ⌃← |
-
-<img width="560" alt="Hold Key 3 and flick the trackball: up = Mission Control (⌃↑), down = App Exposé (⌃↓), left = Move one Space right (⌃→), right = Move one Space left (⌃←)" src="images/key3-desktop-gestures.svg" />
+| ↑ | Mission Control | ⌃↑ |
+| ↓ | App Exposé | ⌃↓ |
+| ← | Move one Space right | ⌃→ |
+| → | Move one Space left | ⌃← |
 
 ### Rectangle window-management gestures (hold Key 3)
 
-When Rectangle override is on, hold **Key 3** and flick the trackball to trigger a Rectangle.app shortcut:
+<img width="560" alt="Hold Key 3 and flick the trackball: up = Maximize (⌃⌥⏎), down = Restore (⌃⌥⌫), left = Left third (⌃⌥D), right = Right two-thirds (⌃⌥T)" src="images/key3-window-gestures.svg" />
+
+With Rectangle override on (toggled by the **Key 2 + Key 3** combo), Key 3 hold enters this layer instead of Spaces & Mission Control. While held, the cursor stays still: flick the trackball in any direction to trigger a [Rectangle.app](https://rectangleapp.com/) shortcut.
 
 | Trackball | Action | Shortcut |
 |:-|:-|:-|
-| ↑ flick | Maximize | ⌃⌥⏎ |
-| ↓ flick | Restore | ⌃⌥⌫ |
-| ← flick | Left third | ⌃⌥D |
-| → flick | Right two-thirds | ⌃⌥T |
+| ↑ | Maximize | ⌃⌥⏎ |
+| ↓ | Restore | ⌃⌥⌫ |
+| ← | Left third | ⌃⌥D |
+| → | Right two-thirds | ⌃⌥T |
 
-<img width="560" alt="Hold Key 3 and flick the trackball: up = Maximize (⌃⌥⏎), down = Restore (⌃⌥⌫), left = Left third (⌃⌥D), right = Right two-thirds (⌃⌥T)" src="images/key3-window-gestures.svg" />
+## Building and Flashing the Firmware
 
-To change gestures, scrolling, or bindings, edit the `zip_scroll_gesture` (Scroll & Navigate), `zip_desktop_gesture` (Spaces & Mission Control), and `zip_rectangle_gesture` (Rectangle window management) nodes; the `RECTANGLE_OVERRIDE` layer; and the `scroll` / `desktop` / `rectangle` blocks under `&trackball_listener` in [`config/boards/shields/kimi/kimiboard.keymap`](config/boards/shields/kimi/kimiboard.keymap).
-
-## Building
-
-This config pins its upstream dependencies (ZMK, `zmk-rgbled-widget`, and `zmk-mouse-gesture`) to fixed commits in [`config/west.yml`](config/west.yml) for reproducible builds. See [Updating pinned versions](#updating-pinned-versions) to move to newer commits.
+For reproducible builds, this config pins its upstream dependencies ([`zmk`](https://github.com/zmkfirmware/zmk), [`zmk-rgbled-widget`](https://github.com/caksoylar/zmk-rgbled-widget), and [`zmk-mouse-gesture`](https://github.com/kot149/zmk-mouse-gesture)) to fixed commit SHAs in [`config/west.yml`](config/west.yml). See [Updating Pinned Versions](#updating-pinned-versions) to bump them.
 
 ### GitHub Actions (CI)
 
-Firmware is built automatically via GitHub Actions on push or pull request. Download the `.uf2` artifacts from the Actions run page.
-
-Two firmware images are produced:
-- **kimiboard** — main firmware with ZMK Studio support
-- **settings_reset** — utility firmware to reset stored settings
+GitHub Actions builds the firmware automatically on every push and pull request, producing two `.uf2` images you can download from the Actions run page:
+- **kimiboard**: main firmware with ZMK Studio support
+- **settings_reset**: utility firmware to reset stored settings
 
 ### Local Build (macOS + colima + Dev Container)
 
@@ -96,7 +93,7 @@ brew install colima docker devcontainer
 
 #### Setup
 
-First clone this repository, then read the pinned SHAs from its manifest into shell variables. The SHAs are the single source of truth and live as the `revision` values in [`config/west.yml`](config/west.yml) (the `zmk`, `zmk-rgbled-widget`, and `zmk-mouse-gesture` projects):
+First clone this repository, then read its pinned SHAs into shell variables. These SHAs are the single source of truth: they live as the `revision` values of the `zmk`, `zmk-rgbled-widget`, and `zmk-mouse-gesture` projects in [`config/west.yml`](config/west.yml).
 
 ```bash
 git clone https://github.com/susumuota/zmk-config-KimiBoard.git
@@ -111,7 +108,7 @@ MOUSEGESTURE_REV=$(awk '/name: zmk-mouse-gesture/{f=1} f&&/revision:/{print $2; 
 echo "MOUSEGESTURE_REV: $MOUSEGESTURE_REV"
 ```
 
-Then clone the ZMK firmware source and extra modules, checking out those same pinned commits so local builds match CI:
+Then clone the ZMK firmware source and extra modules, checking out the same pinned commits so local builds match CI:
 
 ```bash
 git clone https://github.com/zmkfirmware/zmk.git
@@ -125,7 +122,7 @@ git clone https://github.com/kot149/zmk-mouse-gesture.git zmk-modules/zmk-mouse-
 cd zmk-modules/zmk-mouse-gesture && git checkout "$MOUSEGESTURE_REV" && cd ../..
 ```
 
-Start colima and create Docker volumes to mount the config and modules into the container. The `colima start` flags allocate 2 CPUs (`-c 2`), 4GB RAM (`-m 4`), and a 100GB disk (`-d 100`), and use the macOS `vz` virtualization backend (`-t vz`).
+Start colima and create Docker volumes to mount the config and modules into the container. The `colima start` flags allocate 2 CPUs (`-c 2`), 4 GB RAM (`-m 4`), and a 100 GB disk (`-d 100`), and use the macOS `vz` virtualization backend (`-t vz`).
 
 ```bash
 colima start -c 2 -m 4 -d 100 -t vz
@@ -146,7 +143,7 @@ devcontainer up --workspace-folder "$(pwd)/zmk"
 docker ps -a
 ```
 
-Initialize the Zephyr workspace from the host. This only needs to be done once after creating the container workspace:
+Initialize the Zephyr workspace from the host. You only need to do this once, after creating the container workspace:
 
 ```bash
 devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc 'west init -l app/'
@@ -156,7 +153,7 @@ devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc 'west init -l app/'
 devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc 'west update'
 ```
 
-If `west init` reports that the workspace is already initialized and you intentionally want to reinitialize the west workspace metadata, run this first. This removes `.west` metadata only; it does not delete the checked-out source trees. After removing it, run the `west init` and `west update` commands above again:
+If `west init` reports that the workspace is already initialized and you intentionally want to reinitialize it, run this first. It removes only the `.west` metadata; it does not delete the checked-out source trees. Then run the `west init` and `west update` commands above again:
 
 ```bash
 devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc 'rm -rf .west'
@@ -202,7 +199,7 @@ cp -p build/reset/zephyr/zmk.uf2 \
 
 #### Flash
 
-Put the board into bootloader mode (double-tap reset), then from a separate terminal on the host. The `-X` flag is macOS only and prevents extended attribute errors with UF2 mass storage.
+Put the board into bootloader mode (double-tap reset), then copy the firmware to the board. The `-X` flag is macOS only and prevents extended attribute errors with UF2 mass storage.
 
 Flash the settings reset firmware first:
 
@@ -218,7 +215,7 @@ cp -X zmk-config-KimiBoard/firmware/kimiboard_rgbled_adapter-xiao_ble__zmk-zmk.u
 
 #### Cleanup
 
-Stop the Dev Container and remove Docker volumes:
+Stop and remove the Dev Container:
 
 ```bash
 docker ps -a
@@ -252,11 +249,11 @@ colima delete
 colima list
 ```
 
-### Updating pinned versions
+### Updating Pinned Versions
 
 To move the pinned dependencies to newer upstream commits:
 
-1. Find the SHAs you want. For the latest `main` of each:
+1. Find the SHAs you want. For the latest commit on each project's tracked branch (`main` for `zmk` and `zmk-rgbled-widget`, `v1` for `zmk-mouse-gesture`):
 
 ```bash
 git ls-remote https://github.com/zmkfirmware/zmk.git refs/heads/main
@@ -265,5 +262,5 @@ git ls-remote https://github.com/kot149/zmk-mouse-gesture.git refs/heads/v1
 ```
 
 2. Update the three `revision` values in [`config/west.yml`](config/west.yml).
-3. Update the workflow ref in [`.github/workflows/build.yml`](.github/workflows/build.yml) to the same SHA as the `zmk` revision — these must stay in sync.
+3. Update the workflow ref in [`.github/workflows/build.yml`](.github/workflows/build.yml) to the same SHA as the `zmk` revision (these must stay in sync).
 4. Commit the changes.
