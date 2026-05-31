@@ -41,17 +41,17 @@
 
   <!-- Up: Maximize -->
   <text x="860" y="44" text-anchor="middle" font-size="28" font-weight="600" fill="#f5f5f5">Maximize</text>
-  <text x="860" y="76" text-anchor="middle" font-size="21" fill="#cfcfcf">&#8963;&#8997;&#9166;  flick</text>
+  <text x="860" y="76" text-anchor="middle" font-size="21" fill="#cfcfcf">&#8963;&#8997;&#9166;</text>
 
   <!-- Down: Restore -->
   <text x="860" y="440" text-anchor="middle" font-size="28" font-weight="600" fill="#f5f5f5">Restore</text>
-  <text x="860" y="472" text-anchor="middle" font-size="21" fill="#cfcfcf">&#8963;&#8997;&#9003;  flick</text>
+  <text x="860" y="472" text-anchor="middle" font-size="21" fill="#cfcfcf">&#8963;&#8997;&#9003;</text>
 
   <!-- Left: Left -->
   <text x="688" y="244" text-anchor="end" font-size="28" font-weight="600" fill="#f5f5f5">Left</text>
-  <text x="688" y="276" text-anchor="end" font-size="21" fill="#cfcfcf">&#8963;&#8997;D  flick</text>
+  <text x="663" y="276" text-anchor="middle" font-size="21" fill="#cfcfcf">&#8963;&#8997;D</text>
 
   <!-- Right: Right -->
   <text x="1032" y="244" text-anchor="start" font-size="28" font-weight="600" fill="#f5f5f5">Right</text>
-  <text x="1032" y="276" text-anchor="start" font-size="21" fill="#cfcfcf">&#8963;&#8997;T  flick</text>
+  <text x="1064" y="276" text-anchor="middle" font-size="21" fill="#cfcfcf">&#8963;&#8997;T</text>
 </svg>
