@@ -9,7 +9,9 @@
 
 #define DEFAULT 0
 #define SCROLL 1
-#define RECTANGLE 2
+#define DESKTOP 2
+#define RECTANGLE_OVERRIDE 3
+#define RECTANGLE 4
 
 / {
     keymap {
@@ -17,13 +19,25 @@
 
         default_layer {
             bindings = <
-                &bt BT_NXT  &mkp LCLK  &mo_mkp SCROLL MCLK  &mo_mkp RECTANGLE RCLK
+                &bt BT_NXT  &mkp LCLK  &mo_mkp SCROLL MCLK  &mo_mkp DESKTOP RCLK
             >;
         };
 
         scroll_layer {
             bindings = <
                 &trans  &trans  &trans  &trans
+            >;
+        };
+
+        desktop_layer {
+            bindings = <
+                &trans  &trans  &trans  &trans
+            >;
+        };
+
+        rectangle_override_layer {
+            bindings = <
+                &trans  &trans  &trans  &mo_mkp RECTANGLE RCLK
             >;
         };
 
@@ -42,6 +56,12 @@
             key-positions = <0 3>;
             timeout-ms = <50>;  // default: 50
         };
+
+        combo_rectangle_override {
+            bindings = <&tog RECTANGLE_OVERRIDE>;
+            key-positions = <2 3>;
+            timeout-ms = <50>;  // default: 50
+        };
     };
 
     behaviors {
@@ -55,7 +75,7 @@
         };
     };
 
-    // Forward/back gestures on the middle button hold
+    // Scroll & Navigate gestures on the middle button hold
     zip_scroll_gesture: zip_scroll_gesture {
         compatible = "zmk,input-processor-mouse-gesture";
         #input-processor-cells = <0>;
@@ -72,6 +92,36 @@
         back {
             pattern = <GESTURE_RIGHT>;
             bindings = <&kp LG(LBKT)>;
+        };
+    };
+
+    // Spaces & Mission Control gestures on the right button hold
+    zip_desktop_gesture: zip_desktop_gesture {
+        compatible = "zmk,input-processor-mouse-gesture";
+        #input-processor-cells = <0>;
+        stroke-size = <100>;  // default: 200
+        enable-eager-mode;
+        always-active;
+        gesture-cooldown-ms = <200>;  // default: 500
+
+        mission_control {
+            pattern = <GESTURE_UP>;
+            bindings = <&kp LC(UP)>;
+        };
+
+        app_expose {
+            pattern = <GESTURE_DOWN>;
+            bindings = <&kp LC(DOWN)>;
+        };
+
+        space_left {
+            pattern = <GESTURE_LEFT>;
+            bindings = <&kp LC(RIGHT)>;
+        };
+
+        space_right {
+            pattern = <GESTURE_RIGHT>;
+            bindings = <&kp LC(LEFT)>;
         };
     };
 
@@ -110,6 +160,12 @@
     scroll {
         layers = <SCROLL>;
         input-processors = <&zip_scroll_gesture &zip_x_scaler 0 1 &zip_xy_to_scroll_mapper &zip_scroll_scaler (-1) 32>;
+    };
+
+    desktop {
+        layers = <DESKTOP>;
+        // recognize gesture first, then zero movement so the cursor stays put
+        input-processors = <&zip_desktop_gesture &zip_x_scaler 0 1 &zip_y_scaler 0 1>;
     };
 
     rectangle {

@@ -18,16 +18,18 @@ Keys 2 and 3 are hold-taps (`mo_mkp`, tap-preferred, 200 ms): a quick tap sends 
 |:-|:-|:-|
 | Key 0 | Switch Bluetooth connection (cycle through 1 → 2 → 3) | — |
 | Key 1 | Left click | — |
-| Key 2 | Middle click | Scroll + forward/back gesture layer |
-| Key 3 | Right click | Window-management gesture layer |
+| Key 2 | Middle click | Scroll & Navigate gesture layer |
+| Key 3 | Right click | Spaces & Mission Control gesture layer, or Rectangle gesture layer when Rectangle override is on |
 
-<img width="560" alt="Default keymap: Key 0 tap = Switch BT, Key 1 tap = Left click, Key 2 tap = Middle click / hold = Scroll layer, Key 3 tap = Right click / hold = Window layer, trackball moves the pointer; Key 0 + Key 3 clears Bluetooth pairing" src="images/default-keymap.svg" />
+<img width="560" alt="Default keymap: Key 0 tap = Switch BT, Key 1 tap = Left click, Key 2 tap = Middle click / hold = Scroll layer, Key 3 tap = Right click / hold = Spaces & Mission Control or Rectangle layer, trackball moves the pointer; Key 0 + Key 3 clears Bluetooth pairing; Key 2 + Key 3 toggles Rectangle override" src="images/default-keymap.svg" />
 
 **Key 0 + Key 3** (combo) clears the current Bluetooth pairing.
 
+**Key 2 + Key 3** (combo) toggles Rectangle override mode. When Rectangle override is off, holding Key 3 enters the Spaces & Mission Control gesture layer. When Rectangle override is on, holding Key 3 enters the Rectangle gesture layer.
+
 The trackball provides pointer movement (600 CPI, smart-mode enabled).
 
-### Scroll & forward/back gestures (hold Key 2)
+### Scroll & Navigate gestures (hold Key 2)
 
 Hold **Key 2** to enter the scroll layer. The cursor stays still (the horizontal axis is zeroed); move the trackball up/down to scroll, or flick left/right to trigger a forward/back gesture (powered by [`zmk-mouse-gesture`](https://github.com/kot149/zmk-mouse-gesture)). Bindings target Chrome on macOS:
 
@@ -42,9 +44,22 @@ Hold **Key 2** to enter the scroll layer. The cursor stays still (the horizontal
 
 Scroll is produced by `&zip_x_scaler 0 1` (zeroes the horizontal axis) feeding `&zip_xy_to_scroll_mapper`, then `&zip_scroll_scaler (-1) 32` inverts and scales it. The `-1` gives **macOS-style natural scrolling**: pushing the trackball up behaves like swiping two fingers up on a trackpad (the page content follows your finger), so the view scrolls down.
 
-### Window-management gestures (hold Key 3)
+### Spaces & Mission Control gestures (hold Key 3)
 
-Hold **Key 3** to enter the rectangle layer. All trackball movement is zeroed (the cursor stays still); flick the trackball to trigger a macOS window-manager ([Rectangle.app](https://rectangleapp.com/)) shortcut:
+Hold **Key 3** to enter the selected right-hold layer. All trackball movement is zeroed (the cursor stays still); flick the trackball to trigger either a macOS Spaces & Mission Control shortcut or a macOS window-manager ([Rectangle.app](https://rectangleapp.com/)) shortcut. Use **Key 2 + Key 3** to toggle `RECTANGLE_OVERRIDE`, which changes Key 3 hold from Spaces & Mission Control gestures to Rectangle gestures without changing the right-click tap.
+
+| Trackball | Action | Shortcut |
+|:-|:-|:-|
+| ↑ flick | Mission Control | ⌃↑ |
+| ↓ flick | App Exposé | ⌃↓ |
+| ← flick | Move one Space right | ⌃→ |
+| → flick | Move one Space left | ⌃← |
+
+<img width="560" alt="Hold Key 3 and flick the trackball: up = Mission Control (⌃↑), down = App Exposé (⌃↓), left = Move one Space right (⌃→), right = Move one Space left (⌃←)" src="images/key3-desktop-gestures.svg" />
+
+### Rectangle window-management gestures (hold Key 3)
+
+When Rectangle override is on, hold **Key 3** and flick the trackball to trigger a Rectangle.app shortcut:
 
 | Trackball | Action | Shortcut |
 |:-|:-|:-|
@@ -55,7 +70,7 @@ Hold **Key 3** to enter the rectangle layer. All trackball movement is zeroed (t
 
 <img width="560" alt="Hold Key 3 and flick the trackball: up = Maximize (⌃⌥⏎), down = Restore (⌃⌥⌫), left = Left third (⌃⌥D), right = Right two-thirds (⌃⌥T)" src="images/key3-window-gestures.svg" />
 
-To change gestures, scrolling, or bindings, edit the `zip_scroll_gesture` (scroll + forward/back) and `zip_rectangle_gesture` (window management) nodes and the `scroll` / `rectangle` blocks under `&trackball_listener` in [`config/boards/shields/kimi/kimiboard.keymap`](config/boards/shields/kimi/kimiboard.keymap).
+To change gestures, scrolling, or bindings, edit the `zip_scroll_gesture` (Scroll & Navigate), `zip_desktop_gesture` (Spaces & Mission Control), and `zip_rectangle_gesture` (Rectangle window management) nodes; the `RECTANGLE_OVERRIDE` layer; and the `scroll` / `desktop` / `rectangle` blocks under `&trackball_listener` in [`config/boards/shields/kimi/kimiboard.keymap`](config/boards/shields/kimi/kimiboard.keymap).
 
 ## Building
 
