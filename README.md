@@ -15,29 +15,32 @@ click, while holding activates a momentary gesture layer.
 |:-|:-|:-|
 | Key 0 | Switch Bluetooth connection (cycle through 1 → 2 → 3) | — |
 | Key 1 | Left click | — |
-| Key 2 | Middle click | Scroll + browser-gesture layer |
+| Key 2 | Middle click | Scroll + forward/back gesture layer |
 | Key 3 | Right click | Window-management gesture layer |
 
 **Key 0 + Key 3** (combo) clears the current Bluetooth pairing.
 
 The trackball provides pointer movement (600 CPI, smart-mode enabled).
 
-### Scroll & browser gestures (hold Key 2)
+### Scroll & forward/back gestures (hold Key 2)
 
 Hold **Key 2** to enter the scroll layer. The cursor stays still (the horizontal axis is
-zeroed); move the trackball up/down to scroll, or flick left/right to trigger a browser
+zeroed); move the trackball up/down to scroll, or flick left/right to trigger a forward/back
 gesture (powered by [`zmk-mouse-gesture`](https://github.com/kot149/zmk-mouse-gesture)).
 Bindings target Chrome on macOS:
 
 | Trackball | Action |
 |:-|:-|
+| ↑ | Scroll down |
+| ↓ | Scroll up |
 | ← flick | Forward (⌘]) |
 | → flick | Back (⌘[) |
-| ↑ / ↓ | Scroll up / down |
 
 Scroll is produced by `&zip_x_scaler 0 1` (zeroes the horizontal axis) feeding
-`&zip_xy_to_scroll_mapper`, then `&zip_scroll_scaler (-1) 32` inverts and scales it, so
-only up/down scrolls.
+`&zip_xy_to_scroll_mapper`, then `&zip_scroll_scaler (-1) 32` inverts and scales it. The
+`-1` gives **macOS-style natural scrolling**: pushing the trackball up behaves like
+swiping two fingers up on a trackpad (the page content follows your finger), so the view
+scrolls down.
 
 ### Window-management gestures (hold Key 3)
 
@@ -47,13 +50,13 @@ stays still); flick the trackball to trigger a macOS window-manager
 
 | Trackball | Action | Shortcut |
 |:-|:-|:-|
-| ← flick | Left third | ⌃⌥D |
-| → flick | Right two-thirds | ⌃⌥T |
 | ↑ flick | Maximize | ⌃⌥⏎ |
 | ↓ flick | Restore | ⌃⌥⌫ |
+| ← flick | Left third | ⌃⌥D |
+| → flick | Right two-thirds | ⌃⌥T |
 
-To change gestures, scrolling, or bindings, edit the `&zip_mouse_gesture` (browser) and
-`zip_mouse_gesture_rect` (window management) nodes and the `scroll` / `rectangle` blocks
+To change gestures, scrolling, or bindings, edit the `zip_scroll_gesture` (scroll +
+forward/back) and `zip_rectangle_gesture` (window management) nodes and the `scroll` / `rectangle` blocks
 under `&trackball_listener` in `config/boards/shields/kimi/kimiboard.keymap`.
 
 ## Building
