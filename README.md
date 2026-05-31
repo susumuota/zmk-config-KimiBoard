@@ -124,53 +124,65 @@ docker volume create --driver local -o o=bind -o type=none \
 docker volume ls
 ```
 
-Start the Dev Container and open a shell:
+Start the Dev Container:
 
 ```bash
 devcontainer up --workspace-folder "$(pwd)/zmk"
 docker ps -a
-
-devcontainer exec --workspace-folder "$(pwd)/zmk" bash
 ```
 
-Inside the container, initialize the Zephyr workspace:
+Initialize the Zephyr workspace from the host. This only needs to be done once after creating the container workspace:
 
 ```bash
-west init -l app/
-west update
+devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc 'west init -l app/'
+```
+
+```bash
+devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc 'west update'
+```
+
+If `west init` reports that the workspace is already initialized and you intentionally want to reinitialize the west workspace metadata, run this first. This removes `.west` metadata only; it does not delete the checked-out source trees. After removing it, run the `west init` and `west update` commands above again:
+
+```bash
+devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc 'rm -rf .west'
 ```
 
 #### Build
 
-Run from the `app/` directory inside the container:
+Run builds from the host with `devcontainer exec`. The commands still run inside the container, where `/workspaces/zmk-config` and `/workspaces/zmk-modules` are mounted by the Dev Container config.
 
 ```bash
-cd app
-mkdir -p /workspaces/zmk-config/firmware
+devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc 'mkdir -p /workspaces/zmk-config/firmware'
 ```
 
 Main firmware:
 
 ```bash
+devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc '
+cd app &&
 west build -p -d build/main -b xiao_ble//zmk -- \
   -DSHIELD="kimiboard rgbled_adapter" \
   -DZMK_CONFIG="/workspaces/zmk-config/config" \
   -DZMK_EXTRA_MODULES="/workspaces/zmk-modules/zmk-rgbled-widget;/workspaces/zmk-modules/zmk-mouse-gesture" \
   -DSNIPPET=studio-rpc-usb-uart \
   -DCONFIG_ZMK_STUDIO=y \
-  -DCONFIG_ZMK_STUDIO_LOCKING=n \
-  && cp -p build/main/zephyr/zmk.uf2 \
-    /workspaces/zmk-config/firmware/kimiboard_rgbled_adapter-xiao_ble__zmk-zmk.uf2
+  -DCONFIG_ZMK_STUDIO_LOCKING=n &&
+cp -p build/main/zephyr/zmk.uf2 \
+  /workspaces/zmk-config/firmware/kimiboard_rgbled_adapter-xiao_ble__zmk-zmk.uf2
+'
 ```
 
 Settings reset firmware:
 
 ```bash
+devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc '
+cd app &&
 west build -p -d build/reset -b xiao_ble//zmk -- \
   -DSHIELD=settings_reset \
-  -DZMK_CONFIG="/workspaces/zmk-config/config" \
-  && cp -p build/reset/zephyr/zmk.uf2 \
-    /workspaces/zmk-config/firmware/settings_reset-xiao_ble__zmk-zmk.uf2
+  -DZMK_CONFIG="/workspaces/zmk-config/config" &&
+cp -p build/reset/zephyr/zmk.uf2 \
+  /workspaces/zmk-config/firmware/settings_reset-xiao_ble__zmk-zmk.uf2
+'
 ```
 
 #### Flash
