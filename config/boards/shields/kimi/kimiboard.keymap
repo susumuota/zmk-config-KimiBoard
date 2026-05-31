@@ -55,8 +55,28 @@
         };
     };
 
+    // Forward/back gestures on the middle button hold
+    zip_scroll_gesture: zip_scroll_gesture {
+        compatible = "zmk,input-processor-mouse-gesture";
+        #input-processor-cells = <0>;
+        stroke-size = <100>;  // default: 200
+        enable-eager-mode;
+        always-active;
+        gesture-cooldown-ms = <200>;  // default: 500
+
+        forward {
+            pattern = <GESTURE_LEFT>;
+            bindings = <&kp LG(RBKT)>;
+        };
+
+        back {
+            pattern = <GESTURE_RIGHT>;
+            bindings = <&kp LG(LBKT)>;
+        };
+    };
+
     // Rectangle window-management gestures on the right button hold
-    zip_mouse_gesture_rect: zip_mouse_gesture_rect {
+    zip_rectangle_gesture: zip_rectangle_gesture {
         compatible = "zmk,input-processor-mouse-gesture";
         #input-processor-cells = <0>;
         stroke-size = <100>;  // default: 200
@@ -68,14 +88,17 @@
             pattern = <GESTURE_LEFT>;
             bindings = <&kp LC(LA(D))>;
         };
+
         right_two_thirds {
             pattern = <GESTURE_RIGHT>;
             bindings = <&kp LC(LA(T))>;
         };
+
         maximize {
             pattern = <GESTURE_UP>;
             bindings = <&kp LC(LA(RET))>;
         };
+
         restore {
             pattern = <GESTURE_DOWN>;
             bindings = <&kp LC(LA(BSPC))>;
@@ -83,32 +106,15 @@
     };
 };
 
-&zip_mouse_gesture {
-    stroke-size = <100>;  // default: 200
-    enable-eager-mode;
-    always-active;
-    gesture-cooldown-ms = <200>;  // default: 500
-
-    back {
-        pattern = <GESTURE_RIGHT>;
-        bindings = <&kp LG(LBKT)>;
-    };
-
-    forward {
-        pattern = <GESTURE_LEFT>;
-        bindings = <&kp LG(RBKT)>;
-    };
-};
-
 &trackball_listener {
     scroll {
         layers = <SCROLL>;
-        input-processors = <&zip_mouse_gesture &zip_x_scaler 0 1 &zip_xy_to_scroll_mapper &zip_scroll_scaler (-1) 32>;
+        input-processors = <&zip_scroll_gesture &zip_x_scaler 0 1 &zip_xy_to_scroll_mapper &zip_scroll_scaler (-1) 32>;
     };
 
     rectangle {
         layers = <RECTANGLE>;
         // recognize gesture first, then zero movement so the cursor stays put
-        input-processors = <&zip_mouse_gesture_rect &zip_x_scaler 0 1 &zip_y_scaler 0 1>;
+        input-processors = <&zip_rectangle_gesture &zip_x_scaler 0 1 &zip_y_scaler 0 1>;
     };
 };
