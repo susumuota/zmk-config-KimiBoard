@@ -1,10 +1,14 @@
 # ZMK Config for KimiBoard
 
-<img width="1920" height="1080" alt="KimiBoard switches" src="https://github.com/user-attachments/assets/21cd87cc-cafe-45ed-b6bb-a46061c3a2e3" />
+<img width="1920" height="1080" alt="KimiBoard switches" src="https://github.com/user-attachments/assets/0d2e7812-2c09-40fd-a618-07bce5b48ad3" />
 
-A 4-key Bluetooth/USB keyboard with a PMW3610 trackball, built on the Seeed XIAO BLE (nRF52840). Supports up to 3 Bluetooth pairings and includes an RGB LED status widget.
+This repository is a [ZMK](https://zmk.dev/) firmware configuration for sirocom's [KimiBoard](https://github.com/sirocominfo/zmk-config-KimiBoard), a 4-key Bluetooth/USB keyboard with a [PMW3610](https://www.pixart.com/products-detail/21/PMW3610DM-SUDU) trackball built on the [Seeed XIAO BLE](https://wiki.seeedstudio.com/XIAO_BLE/) (nRF52840). It supports up to 3 Bluetooth pairings, [mouse gestures](https://github.com/kot149/zmk-mouse-gesture) (scrolling, forward/back, and window management) via the trackball, and includes an [RGB LED status widget](https://github.com/caksoylar/zmk-rgbled-widget).
 
-[ZMK Studio](https://zmk.studio/) is enabled, allowing keymap customization without reflashing.
+The KimiBoard is available for purchase at [sirocom's BOOTH shop](https://sirocom.booth.pm/items/8301933).
+
+## Credits
+
+This repository is a fork of [sirocominfo/zmk-config-KimiBoard](https://github.com/sirocominfo/zmk-config-KimiBoard) by sirocominfo. Many thanks to the original author for the hardware design, base configuration, and the header photo.
 
 ## Default Keymap
 
