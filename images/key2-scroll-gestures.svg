@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -32 1167 558" font-family="-apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="44%" r="78%">
+      <stop offset="0%" stop-color="#484848"/>
+      <stop offset="100%" stop-color="#363636"/>
+    </radialGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ededed"/>
+    </marker>
+  </defs>
+
+  <!-- Background card (matches the render's gray) -->
+  <rect x="0" y="-32" width="1167" height="558" rx="32" fill="url(#bg)"/>
+
+  <!-- Key housing -->
+  <rect x="80" y="162" width="464" height="176" rx="28" fill="#bcbcbc" stroke="#a6a6a6" stroke-width="2"/>
+
+  <!-- Keycaps 1 / 2 / 3 (square; middle = Key 2, held) -->
+  <rect x="104" y="186" width="128" height="128" rx="14" fill="#d8d8d8" stroke="#b5b5b5" stroke-width="2"/>
+  <rect x="248" y="186" width="128" height="128" rx="14" fill="#4a90d9" stroke="#3577bd" stroke-width="2"/>
+  <rect x="392" y="186" width="128" height="128" rx="14" fill="#d8d8d8" stroke="#b5b5b5" stroke-width="2"/>
+  <text x="168" y="262" text-anchor="middle" font-size="34" font-weight="700" fill="#4a4a4a">1</text>
+  <text x="312" y="262" text-anchor="middle" font-size="34" font-weight="700" fill="#ffffff">2</text>
+  <text x="456" y="262" text-anchor="middle" font-size="34" font-weight="700" fill="#4a4a4a">3</text>
+
+  <!-- "Hold" tooltip below Key 2 -->
+  <path d="M300,368 L324,368 L312,352 z" fill="#4a90d9"/>
+  <rect x="256" y="366" width="112" height="44" rx="22" fill="#4a90d9"/>
+  <text x="312" y="395" text-anchor="middle" font-size="24" font-weight="700" fill="#ffffff">Hold</text>
+
+  <!-- Trackball housing -->
+  <rect x="770" y="160" width="180" height="180" rx="28" fill="#bcbcbc" stroke="#a6a6a6" stroke-width="2"/>
+  <circle cx="860" cy="250" r="66" fill="#cfcfcf" stroke="#aeaeae" stroke-width="2"/>
+  <circle cx="838" cy="228" r="20" fill="#ffffff" opacity="0.6"/>
+
+  <!-- Direction arrows (all 92 px) -->
+  <line x1="860" y1="184" x2="860" y2="92"   stroke="#ededed" stroke-width="6" marker-end="url(#arrow)"/>
+  <line x1="860" y1="316" x2="860" y2="408"  stroke="#ededed" stroke-width="6" marker-end="url(#arrow)"/>
+  <line x1="794" y1="250" x2="702" y2="250"  stroke="#ededed" stroke-width="6" marker-end="url(#arrow)"/>
+  <line x1="926" y1="250" x2="1018" y2="250" stroke="#ededed" stroke-width="6" marker-end="url(#arrow)"/>
+
+  <!-- Labels -->
+  <text x="860" y="72"  text-anchor="middle" font-size="28" font-weight="600" fill="#f5f5f5">Scroll down</text>
+  <text x="860" y="440" text-anchor="middle" font-size="28" font-weight="600" fill="#f5f5f5">Scroll up</text>
+
+  <text x="688" y="244" text-anchor="end" font-size="28" font-weight="600" fill="#f5f5f5">Forward</text>
+  <text x="688" y="276" text-anchor="end" font-size="21" fill="#cfcfcf">&#8984;]  flick</text>
+
+  <text x="1032" y="244" text-anchor="start" font-size="28" font-weight="600" fill="#f5f5f5">Back</text>
+  <text x="1032" y="276" text-anchor="start" font-size="21" fill="#cfcfcf">&#8984;[  flick</text>
+</svg>

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-42 10 1167 558" font-family="-apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="78%">
+      <stop offset="0%" stop-color="#484848"/>
+      <stop offset="100%" stop-color="#363636"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background card (matches the render's gray) -->
+  <rect x="-42" y="10" width="1167" height="558" rx="32" fill="url(#bg)"/>
+
+  <!-- Tap actions (above keys) -->
+  <text x="200" y="132" text-anchor="middle" font-size="21.6" font-weight="600" fill="#f5f5f5">Switch BT</text>
+  <text x="312" y="132" text-anchor="middle" font-size="21.6" font-weight="600" fill="#f5f5f5">Left click</text>
+  <text x="456" y="132" text-anchor="middle" font-size="21.6" font-weight="600" fill="#f5f5f5">Middle click</text>
+  <text x="600" y="132" text-anchor="middle" font-size="21.6" font-weight="600" fill="#f5f5f5">Right click</text>
+
+  <!-- Key housing -->
+  <rect x="144" y="162" width="544" height="176" rx="28" fill="#bcbcbc" stroke="#a6a6a6" stroke-width="2"/>
+
+  <!-- Keycaps: Key 0 is a quarter-size key at the bottom-right of its cell; 1 / 2 / 3 full size -->
+  <rect x="168" y="250" width="64" height="64" rx="8" fill="#d8d8d8" stroke="#b5b5b5" stroke-width="2"/>
+  <rect x="248" y="186" width="128" height="128" rx="14" fill="#d8d8d8" stroke="#b5b5b5" stroke-width="2"/>
+  <rect x="392" y="186" width="128" height="128" rx="14" fill="#d8d8d8" stroke="#b5b5b5" stroke-width="2"/>
+  <rect x="536" y="186" width="128" height="128" rx="14" fill="#d8d8d8" stroke="#b5b5b5" stroke-width="2"/>
+  <text x="200" y="290" text-anchor="middle" font-size="20" font-weight="700" fill="#4a4a4a">0</text>
+  <text x="312" y="262" text-anchor="middle" font-size="34" font-weight="700" fill="#4a4a4a">1</text>
+  <text x="456" y="262" text-anchor="middle" font-size="34" font-weight="700" fill="#4a4a4a">2</text>
+  <text x="600" y="262" text-anchor="middle" font-size="34" font-weight="700" fill="#4a4a4a">3</text>
+
+  <!-- Hold actions (below keys) -->
+  <rect x="406" y="364" width="100" height="40" rx="20" fill="#4a90d9"/>
+  <text x="456" y="391" text-anchor="middle" font-size="21.6" font-weight="600" fill="#ffffff">Scroll</text>
+  <rect x="544" y="364" width="112" height="40" rx="20" fill="#4a90d9"/>
+  <text x="600" y="391" text-anchor="middle" font-size="21.6" font-weight="600" fill="#ffffff">Window</text>
+
+  <!-- Trackball housing -->
+  <rect x="760" y="160" width="180" height="180" rx="28" fill="#bcbcbc" stroke="#a6a6a6" stroke-width="2"/>
+  <circle cx="850" cy="250" r="66" fill="#cfcfcf" stroke="#aeaeae" stroke-width="2"/>
+  <circle cx="828" cy="228" r="20" fill="#ffffff" opacity="0.6"/>
+  <text x="850" y="382" text-anchor="middle" font-size="21.6" font-weight="600" fill="#f5f5f5">Move pointer</text>
+
+  <!-- Combo note -->
+  <text x="384" y="470" text-anchor="middle" font-size="27" fill="#cfcfcf">Key 0 + Key 3 &#8594; clear Bluetooth pairing</text>
+</svg>

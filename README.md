@@ -22,6 +22,8 @@ click, while holding activates a momentary gesture layer.
 | Key 2 | Middle click | Scroll + forward/back gesture layer |
 | Key 3 | Right click | Window-management gesture layer |
 
+<img width="560" alt="Default keymap: Key 0 tap = Switch BT, Key 1 tap = Left click, Key 2 tap = Middle click / hold = Scroll layer, Key 3 tap = Right click / hold = Window layer, trackball moves the pointer; Key 0 + Key 3 clears Bluetooth pairing" src="images/default-keymap.svg" />
+
 **Key 0 + Key 3** (combo) clears the current Bluetooth pairing.
 
 The trackball provides pointer movement (600 CPI, smart-mode enabled).
@@ -33,12 +35,14 @@ zeroed); move the trackball up/down to scroll, or flick left/right to trigger a 
 gesture (powered by [`zmk-mouse-gesture`](https://github.com/kot149/zmk-mouse-gesture)).
 Bindings target Chrome on macOS:
 
-| Trackball | Action |
-|:-|:-|
-| ↑ | Scroll down |
-| ↓ | Scroll up |
-| ← flick | Forward (⌘]) |
-| → flick | Back (⌘[) |
+| Trackball | Action | Shortcut |
+|:-|:-|:-|
+| ↑ | Scroll down | — |
+| ↓ | Scroll up | — |
+| ← flick | Forward | ⌘] |
+| → flick | Back | ⌘[ |
+
+<img width="560" alt="Hold Key 2 and move the trackball: up = scroll down, down = scroll up, left flick = Forward (⌘]), right flick = Back (⌘[)" src="images/key2-scroll-gestures.svg" />
 
 Scroll is produced by `&zip_x_scaler 0 1` (zeroes the horizontal axis) feeding
 `&zip_xy_to_scroll_mapper`, then `&zip_scroll_scaler (-1) 32` inverts and scales it. The
@@ -58,6 +62,8 @@ stays still); flick the trackball to trigger a macOS window-manager
 | ↓ flick | Restore | ⌃⌥⌫ |
 | ← flick | Left third | ⌃⌥D |
 | → flick | Right two-thirds | ⌃⌥T |
+
+<img width="560" alt="Hold Key 3 and flick the trackball: up = Maximize (⌃⌥⏎), down = Restore (⌃⌥⌫), left = Left third (⌃⌥D), right = Right two-thirds (⌃⌥T)" src="images/key3-window-gestures.svg" />
 
 To change gestures, scrolling, or bindings, edit the `zip_scroll_gesture` (scroll +
 forward/back) and `zip_rectangle_gesture` (window management) nodes and the `scroll` / `rectangle` blocks
