@@ -16,10 +16,10 @@ This ZMK config is a fork of [sirocominfo/zmk-config-KimiBoard](https://github.c
 
 Each key has a tap action, and Keys 2 and 3 are hold-taps (200 ms) that add a hold action: a quick tap sends a mouse click, while holding activates a momentary gesture layer. In the diagram above, white pills are tap actions and blue pills are hold actions. On the default layer, the trackball moves the pointer.
 
-| Key | Tap | Hold (≥200 ms) |
+| Key | Tap | Hold |
 |:-|:-|:-|
-| 0 | Switch Bluetooth connection (cycle through 1 → 2 → 3) | — |
-| 1 | Left click | — |
+| 0 | Switch Bluetooth connection (cycle through BT1 → BT2 → BT3 → BT1...) | - |
+| 1 | Left click | - |
 | 2 | Middle click | Scroll & Navigate gesture layer |
 | 3 | Right click | Spaces & Mission Control gesture layer, or Rectangle gesture layer when Rectangle override is on |
 
@@ -38,8 +38,8 @@ This layer emulates the macOS **two-finger trackpad gestures** with the trackbal
 
 | Trackball | Action | Shortcut |
 |:-|:-|:-|
-| ↑ | Scroll down | — |
-| ↓ | Scroll up | — |
+| ↑ | Scroll down | - |
+| ↓ | Scroll up | - |
 | ← flick | Forward | ⌘] |
 | → flick | Back | ⌘[ |
 
@@ -70,6 +70,78 @@ With Rectangle override on (toggled by the **Key 2 + Key 3** combo), Key 3 hold 
 | ↓ | Restore | ⌃⌥⌫ |
 | ← | Left third | ⌃⌥D |
 | → | Right two-thirds | ⌃⌥T |
+
+## Customization
+
+KimiBoard's behavior is defined in the shield files under [`config/boards/shields/kimi/`](config/boards/shields/kimi). After editing any of them, rebuild and reflash the firmware (see [Building and Flashing the Firmware](#building-and-flashing-the-firmware)) for the changes to take effect.
+
+### Trackball feel
+
+**Pointer speed** is the trackball's CPI (counts per inch), set by the PMW3610 driver's [`res-cpi`](https://github.com/zephyrproject-rtos/zephyr/blob/main/dts/bindings/input/pixart%2Cpmw3610.yaml) property in [`kimiboard.overlay`](config/boards/shields/kimi/kimiboard.overlay):
+
+```dts
+res-cpi = <400>;
+```
+
+Raise the value for a faster pointer, lower it for finer control. Valid values range from `200` to `3200` in increments of `200` (other values are rounded down).
+
+**Scroll speed and direction** are controlled by the SCROLL layer's [input processors](https://zmk.dev/docs/keymaps/input-processors) in [`kimiboard.keymap`](config/boards/shields/kimi/kimiboard.keymap):
+
+```dts
+input-processors = <&zip_scroll_gesture &zip_x_scaler 0 1 &zip_xy_to_scroll_mapper &zip_scroll_scaler (-1) 48>;
+```
+
+The scaler takes a **multiplier** and a **divisor**, scaling each scroll value as `value × multiplier ÷ divisor`. So `&zip_scroll_scaler (-1) 48` scales the scroll speed to `-1/48`:
+
+- The negative sign inverts the direction to match macOS natural scrolling; use `1` instead of `-1` to reverse.
+- The divisor `48` sets the speed. A larger number scrolls slower, and a smaller number scrolls faster.
+
+Here `zip_x_scaler` and `zip_scroll_scaler` are ZMK [scaler](https://zmk.dev/docs/keymaps/input-processors/scaler) processors and `zip_xy_to_scroll_mapper` is a [code mapper](https://zmk.dev/docs/keymaps/input-processors/code-mapper), while `zip_scroll_gesture` comes from the [`zmk-mouse-gesture`](https://github.com/kot149/zmk-mouse-gesture) module.
+
+**Gesture sensitivity** is the [`stroke-size`](https://github.com/kot149/zmk-mouse-gesture#options) property on each gesture node (`zip_scroll_gesture`, `zip_desktop_gesture`, and `zip_rectangle_gesture`) in [`kimiboard.keymap`](config/boards/shields/kimi/kimiboard.keymap):
+
+```dts
+stroke-size = <100>;  // default: 200
+```
+
+It sets how far the trackball must travel (in raw counts) to register one directional stroke of a gesture. Lower it so flicks trigger with a shorter, lighter movement; raise it to require a longer, more deliberate flick and avoid accidental gestures. Note `stroke-size` is measured in raw counts, not physical distance, so changing `res-cpi` also changes how far you physically move for a given `stroke-size`.
+
+**Gesture cooldown** is the [`gesture-cooldown-ms`](https://github.com/kot149/zmk-mouse-gesture#options) property on the same gesture nodes in [`kimiboard.keymap`](config/boards/shields/kimi/kimiboard.keymap):
+
+```dts
+gesture-cooldown-ms = <200>;  // default: 500
+```
+
+After a gesture fires, processing pauses for this many milliseconds before the next gesture can be recognized, which prevents an accidental double trigger from one continuous flick. Lower it to fire repeated gestures (such as moving across several Spaces) more quickly; raise it if a single flick sometimes registers twice.
+
+### Keys and layers
+
+**Tap actions** are the `default_layer` bindings in [`kimiboard.keymap`](config/boards/shields/kimi/kimiboard.keymap), listed left to right as Keys 0 to 3:
+
+```dts
+&bt BT_NXT  &mkp LCLK  &mo_mkp SCROLL MCLK  &mo_mkp DESKTOP RCLK
+```
+
+Keys 0 and 1 are plain taps: Key 0 cycles the [Bluetooth](https://zmk.dev/docs/keymaps/behaviors/bluetooth) connection (`&bt`) and Key 1 sends a [mouse click](https://zmk.dev/docs/keymaps/behaviors/mouse-emulation) (`&mkp`). Keys 2 and 3 use the `mo_mkp` [hold-tap](https://zmk.dev/docs/keymaps/behaviors/hold-tap), where the first parameter is the [**hold** layer](https://zmk.dev/docs/keymaps/behaviors/layers) and the second is the **tap** mouse click. For example, swap `LCLK` for `RCLK` to make Key 1 a right click, or change `DESKTOP` to set which layer Key 3 holds into.
+
+**Hold vs. tap timing** is set by the `mo_mkp` [hold-tap](https://zmk.dev/docs/keymaps/behaviors/hold-tap) behavior in the same file:
+
+```dts
+flavor = "tap-preferred";
+tapping-term-ms = <200>;
+```
+
+Lower `tapping-term-ms` to trigger the gesture layer (hold) sooner; raise it to leave more time for a clean click (tap).
+
+**Combo timing** is the `timeout-ms` of each [combo](https://zmk.dev/docs/keymaps/combos) in [`kimiboard.keymap`](config/boards/shields/kimi/kimiboard.keymap):
+
+```dts
+timeout-ms = <50>;  // default: 50
+```
+
+Both keys of a combo must be pressed within this many milliseconds to register together. Lower it to make accidental combos less likely (the two keys must be hit closer to simultaneously); raise it if a combo is hard to trigger reliably.
+
+Key 3's hold layer defaults to Spaces & Mission Control. The Key 2 + Key 3 combo toggles it to Rectangle. See [Default Keymap](#default-keymap) for details.
 
 ## Building and Flashing the Firmware
 
