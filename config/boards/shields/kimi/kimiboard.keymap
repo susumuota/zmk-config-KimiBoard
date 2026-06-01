@@ -159,7 +159,7 @@
 &trackball_listener {
     scroll {
         layers = <SCROLL>;
-        input-processors = <&zip_scroll_gesture &zip_x_scaler 0 1 &zip_xy_to_scroll_mapper &zip_scroll_scaler (-1) 32>;
+        input-processors = <&zip_scroll_gesture &zip_x_scaler 0 1 &zip_xy_to_scroll_mapper &zip_scroll_scaler (-1) 48>;
     };
 
     desktop {
