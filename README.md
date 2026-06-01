@@ -60,7 +60,7 @@ This layer emulates the macOS **three-finger trackpad gestures** with the trackb
 
 ### Rectangle window-management gestures (hold Key 3)
 
-<img width="560" alt="Hold Key 3 and flick the trackball: up = Maximize (⌃⌥⏎), down = Restore (⌃⌥⌫), left = Left third (⌃⌥D), right = Right two-thirds (⌃⌥T)" src="images/key3-window-gestures.svg" />
+<img width="560" alt="Hold Key 3 and flick the trackball: up = Maximize (⌃⌥⏎), down = Restore (⌃⌥⌫), left = Left third (⌃⌥D), right = Right two-thirds (⌃⌥T)" src="images/key3-rectangle-gestures.svg" />
 
 With Rectangle override on (toggled by the **Key 2 + Key 3** combo), Key 3 hold enters this layer instead of Spaces & Mission Control. While held, the cursor stays still: flick the trackball in any direction to trigger a [Rectangle.app](https://rectangleapp.com/) shortcut.
 
