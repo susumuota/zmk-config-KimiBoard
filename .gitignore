@@ -1,4 +1,8 @@
 .vscode
 .claude
+.env
+
+__pycache__/
+.venv/
 
 firmware/

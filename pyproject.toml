@@ -1,0 +1,17 @@
+[project]
+name = "zmk-config-kimiboard"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "pyyaml>=6.0.3",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.15",
+    "ty>=0.0.42",
+    "types-pyyaml>=6.0.12.20260518",
+]
+
+[tool.ruff]
+line-length = 119

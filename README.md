@@ -149,7 +149,7 @@ For reproducible builds, this config pins its upstream dependencies ([`zmk`](htt
 
 ### GitHub Actions (CI)
 
-GitHub Actions builds the firmware automatically on every push and pull request, producing two `.uf2` images you can download from the Actions run page:
+GitHub Actions builds the firmware automatically on every push and pull request, producing two `.uf2` images you can download from the Actions run page. See the [ZMK user setup guide](https://zmk.dev/docs/user-setup#install-the-firmware) for the standard GitHub Actions download flow:
 - **kimiboard**: main firmware with ZMK Studio support
 - **settings_reset**: utility firmware to reset stored settings
 
@@ -233,41 +233,14 @@ devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc 'rm -rf .west'
 
 #### Build
 
-Run builds from the host with `devcontainer exec`. The commands still run inside the container, where `/workspaces/zmk-config` and `/workspaces/zmk-modules` are mounted by the Dev Container config.
+Run the local build script from the host with `devcontainer exec`. [`scripts/build-local.py`](scripts/build-local.py) locally emulates ZMK's [reusable user config build workflow](https://github.com/zmkfirmware/zmk/blob/main/.github/workflows/build-user-config.yml). It reads [`build.yaml`](build.yaml), runs each build inside the container, and writes the resulting `.uf2` files to `firmware/` using the same artifact names as GitHub Actions. For fallback artifact names, spaces are replaced with underscores.
 
 ```bash
-devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc 'mkdir -p /workspaces/zmk-config/firmware'
+devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc \
+  'cd /workspaces/zmk-config && python3 scripts/build-local.py'
 ```
 
-Main firmware:
-
-```bash
-devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc '
-cd app &&
-west build -p -d build/main -b xiao_ble//zmk -- \
-  -DSHIELD="kimiboard rgbled_adapter" \
-  -DZMK_CONFIG="/workspaces/zmk-config/config" \
-  -DZMK_EXTRA_MODULES="/workspaces/zmk-modules/zmk-rgbled-widget;/workspaces/zmk-modules/zmk-mouse-gesture" \
-  -DSNIPPET=studio-rpc-usb-uart \
-  -DCONFIG_ZMK_STUDIO=y \
-  -DCONFIG_ZMK_STUDIO_LOCKING=n &&
-cp -p build/main/zephyr/zmk.uf2 \
-  /workspaces/zmk-config/firmware/kimiboard_rgbled_adapter-xiao_ble__zmk-zmk.uf2
-'
-```
-
-Settings reset firmware:
-
-```bash
-devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc '
-cd app &&
-west build -p -d build/reset -b xiao_ble//zmk -- \
-  -DSHIELD=settings_reset \
-  -DZMK_CONFIG="/workspaces/zmk-config/config" &&
-cp -p build/reset/zephyr/zmk.uf2 \
-  /workspaces/zmk-config/firmware/settings_reset-xiao_ble__zmk-zmk.uf2
-'
-```
+To inspect the generated `west build` commands without building, add `--dry-run`.
 
 #### Flash
 
