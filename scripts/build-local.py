@@ -40,34 +40,14 @@ def default_artifact_name(entry: dict[str, Any]) -> str:
 
 
 def build_command(
-    entry: dict[str, Any],
-    *,
-    zmk_app: Path,
-    config_dir: Path,
-    build_dir: Path,
-    extra_modules: str,
+    entry: dict[str, Any], zmk_app: Path, config_dir: Path, build_dir: Path, extra_modules: str
 ) -> list[str]:
-    cmd = [
-        "west",
-        "build",
-        "-p",
-        "-s",
-        str(zmk_app),
-        "-d",
-        str(build_dir),
-        "-b",
-        str(entry["board"]),
-    ]
+    cmd = ["west", "build", "-p", "-s", str(zmk_app), "-d", str(build_dir), "-b", str(entry["board"])]
 
     if snippet := entry.get("snippet"):
         cmd.extend(["-S", str(snippet)])
 
-    cmd.extend(
-        [
-            "--",
-            f"-DZMK_CONFIG={config_dir}",
-        ]
-    )
+    cmd.extend(["--", f"-DZMK_CONFIG={config_dir}"])
 
     if shield := entry.get("shield"):
         cmd.append(f"-DSHIELD={shield}")
@@ -102,13 +82,7 @@ def main() -> None:
         build_dir = args.zmk_app / "build" / "local" / artifact_name
         dest = output_dir / f"{artifact_name}.uf2"
 
-        cmd = build_command(
-            entry,
-            zmk_app=args.zmk_app,
-            config_dir=config_dir,
-            build_dir=build_dir,
-            extra_modules=args.extra_modules,
-        )
+        cmd = build_command(entry, args.zmk_app, config_dir, build_dir, args.extra_modules)
 
         print("+ " + shlex.join(cmd))
 
