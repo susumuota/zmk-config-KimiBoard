@@ -165,18 +165,24 @@ brew install colima docker devcontainer
 
 #### Setup
 
-First clone this repository, then read its pinned SHAs into shell variables. These SHAs are the single source of truth: they live as the `revision` values of the `zmk`, `zmk-rgbled-widget`, and `zmk-mouse-gesture` projects in [`config/west.yml`](config/west.yml).
+First create a workspace directory and `cd` into it. **All commands in the Setup, Build, and Flash sections are run from this directory**, which holds `zmk-config-KimiBoard`, `zmk`, and `zmk-modules` as siblings.
+
+```bash
+mkdir -p kimiboard-workspace
+cd kimiboard-workspace
+```
+
+Then clone this repository and read its pinned SHAs into shell variables. These SHAs are the single source of truth: they live as the `revision` values of the `zmk`, `zmk-rgbled-widget`, and `zmk-mouse-gesture` projects in [`config/west.yml`](config/west.yml).
 
 ```bash
 git clone https://github.com/susumuota/zmk-config-KimiBoard.git
 
 ZMK_REV=$(awk '/name: zmk$/{f=1} f&&/revision:/{print $2; exit}' zmk-config-KimiBoard/config/west.yml)
-echo "ZMK_REV: $ZMK_REV"
-
 RGBLED_REV=$(awk '/name: zmk-rgbled-widget/{f=1} f&&/revision:/{print $2; exit}' zmk-config-KimiBoard/config/west.yml)
-echo "RGBLED_REV: $RGBLED_REV"
-
 MOUSEGESTURE_REV=$(awk '/name: zmk-mouse-gesture/{f=1} f&&/revision:/{print $2; exit}' zmk-config-KimiBoard/config/west.yml)
+
+echo "ZMK_REV: $ZMK_REV"
+echo "RGBLED_REV: $RGBLED_REV"
 echo "MOUSEGESTURE_REV: $MOUSEGESTURE_REV"
 ```
 
@@ -184,14 +190,13 @@ Then clone the ZMK firmware source and extra modules, checking out the same pinn
 
 ```bash
 git clone https://github.com/zmkfirmware/zmk.git
-cd zmk && git checkout "$ZMK_REV" && cd ..
+(cd zmk && git checkout "$ZMK_REV")
 
-mkdir -p zmk-modules
 git clone https://github.com/caksoylar/zmk-rgbled-widget.git zmk-modules/zmk-rgbled-widget
-cd zmk-modules/zmk-rgbled-widget && git checkout "$RGBLED_REV" && cd ../..
+(cd zmk-modules/zmk-rgbled-widget && git checkout "$RGBLED_REV")
 
 git clone https://github.com/kot149/zmk-mouse-gesture.git zmk-modules/zmk-mouse-gesture
-cd zmk-modules/zmk-mouse-gesture && git checkout "$MOUSEGESTURE_REV" && cd ../..
+(cd zmk-modules/zmk-mouse-gesture && git checkout "$MOUSEGESTURE_REV")
 ```
 
 Start colima and create Docker volumes to mount the config and modules into the container. The `colima start` flags allocate 2 CPUs (`-c 2`), 4 GB RAM (`-m 4`), and a 100 GB disk (`-d 100`), and use the macOS `vz` virtualization backend (`-t vz`).
@@ -224,6 +229,8 @@ devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc 'west init -l app/'
 ```bash
 devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc 'west update'
 ```
+
+`west update` clones the Zephyr tree and all module dependencies, so it can take several minutes (sometimes longer on a slow connection). This is expected — let it run to completion.
 
 If `west init` reports that the workspace is already initialized and you intentionally want to reinitialize it, run this first. It removes only the `.west` metadata; it does not delete the checked-out source trees. Then run the `west init` and `west update` commands above again:
 
