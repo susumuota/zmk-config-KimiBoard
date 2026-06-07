@@ -19,7 +19,7 @@
 
         default_layer {
             bindings = <
-                &bt BT_NXT  &mkp LCLK  &mo_mkp SCROLL RCLK  &mo_mkp DESKTOP MCLK
+                &bt BT_NXT  &mkp LCLK  &mo_mkp SCROLL MCLK  &mo_mkp DESKTOP RCLK
             >;
         };
 
@@ -37,7 +37,7 @@
 
         rectangle_override_layer {
             bindings = <
-                &trans  &trans  &trans  &mo_mkp RECTANGLE MCLK
+                &trans  &trans  &trans  &mo_mkp RECTANGLE RCLK
             >;
         };
 
