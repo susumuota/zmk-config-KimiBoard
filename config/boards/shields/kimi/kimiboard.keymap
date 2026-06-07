@@ -19,7 +19,7 @@
 
         default_layer {
             bindings = <
-                &bt BT_NXT  &mkp LCLK  &mo_mkp SCROLL MCLK  &mo_mkp DESKTOP RCLK
+                &bt BT_NXT  &mkp LCLK  &mo SCROLL  &mo_mkp DESKTOP RCLK
             >;
         };
 
@@ -75,7 +75,7 @@
         };
     };
 
-    // Scroll & Navigate gestures on the middle button hold
+    // Scroll & Navigate gestures on the Key 2 hold
     zip_scroll_gesture: zip_scroll_gesture {
         compatible = "zmk,input-processor-mouse-gesture";
         #input-processor-cells = <0>;
