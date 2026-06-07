@@ -9,13 +9,13 @@ manifest:
   projects:
     - name: zmk
       remote: zmkfirmware
-      revision: ed56d81db79cf3a6e5dc02697277c0fad880ad34  # pinned 2026-05-30 (branch main head)
+      revision: 773dec58eaacaef4703b3e4595e50bd71f6cad3d  # confirmed on 2026-06-08 (branch main head)
       import: app/west.yml
     - name: zmk-rgbled-widget
       remote: caksoylar
-      revision: 9cef5af88c26e4b86a2a448160055dc740c14d6f  # pinned 2026-05-30 (branch main head)
+      revision: 9cef5af88c26e4b86a2a448160055dc740c14d6f  # confirmed on 2026-06-08 (branch main head)
     - name: zmk-mouse-gesture
       remote: kot149
-      revision: 5c86049f5da433ee603fdd14204681d5fa1b5eef  # pinned 2026-05-30 (branch v1 head)
+      revision: 855a6e80f18f4b19ea2181648ac062ec72876ece  # confirmed on 2026-06-08 (branch v1 head)
   self:
     path: config
