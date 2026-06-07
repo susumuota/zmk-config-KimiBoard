@@ -12,7 +12,7 @@ This ZMK config is a fork of [sirocominfo/zmk-config-KimiBoard](https://github.c
 
 ## Default Keymap
 
-<img width="800" alt="Default keymap: Key 0 tap = Switch BT, Key 1 tap = Left click, Key 2 hold = Scroll layer (no tap), Key 3 tap = Right click / hold = Spaces & Mission Control or Rectangle layer, trackball moves the pointer; Key 0 + Key 3 clears Bluetooth pairing; Key 2 + Key 3 toggles Rectangle override" src="images/default-keymap.svg" />
+<img width="800" alt="Default keymap: Key 0 tap = Switch BT, Key 1 tap = Left click, Key 2 hold = Scroll layer (no tap), Key 3 tap = Right click / hold = Desktop or Window layer, trackball moves the pointer; Key 0 + Key 3 clears Bluetooth pairing; Key 2 + Key 3 switches Key 3 hold between the Desktop and Window gestures" src="images/default-keymap.svg" />
 
 Keys 0, 1, and 3 have a tap action. Key 3 is a hold-tap (200 ms): a quick tap sends a mouse click, while holding activates a momentary gesture layer. Key 2 has no tap — pressing it immediately enters the Scroll layer and releasing it exits. In the diagram above, white pills are tap actions and blue pills are hold actions. On the default layer, the trackball moves the pointer.
 
@@ -20,17 +20,17 @@ Keys 0, 1, and 3 have a tap action. Key 3 is a hold-tap (200 ms): a quick tap se
 |:-|:-|:-|
 | 0 | Switch Bluetooth connection (cycle through BT1 → BT2 → BT3 → BT1...) | - |
 | 1 | Left click | - |
-| 2 | - | Scroll & Navigate gesture layer (press to enter, release to exit) |
-| 3 | Right click | Spaces & Mission Control gesture layer, or Rectangle gesture layer when Rectangle override is on |
+| 2 | - | Scroll gesture layer (press to enter, release to exit) |
+| 3 | Right click | Desktop gesture layer, or Window gesture layer after the Key 2 + Key 3 switch |
 
 Pressing two keys together triggers a combo:
 
 | Combo | Action |
 |:-|:-|
 | 0 + 3 | Clear the current Bluetooth pairing |
-| 2 + 3 | Toggle Rectangle override: switches Key 3 hold between the Spaces & Mission Control and Rectangle gesture layers |
+| 2 + 3 | Switch Key 3 hold between the Desktop and Window gestures (press again to switch back) |
 
-### Scroll & Navigate gestures (hold Key 2)
+### Scroll gestures (hold Key 2)
 
 <img width="800" alt="Hold Key 2 and move the trackball: up = scroll down, down = scroll up, left flick = Forward (⌘]), right flick = Back (⌘[)" src="images/key2-scroll-gestures.svg" />
 
@@ -45,11 +45,11 @@ This layer emulates the macOS **two-finger trackpad gestures** with the trackbal
 
 The up/down mapping may look reversed, but it follows **macOS-style natural scrolling**: pushing the trackball up is like swiping two fingers up on a trackpad (the page content follows your finger), so the view scrolls down.
 
-### Spaces & Mission Control gestures (hold Key 3)
+### Desktop gestures (hold Key 3)
 
 <img width="800" alt="Hold Key 3 and flick the trackball: up = Mission Control (⌃↑), down = App Exposé (⌃↓), left = Move one Space right (⌃→), right = Move one Space left (⌃←)" src="images/key3-desktop-gestures.svg" />
 
-This layer emulates the macOS **three-finger trackpad gestures** with the trackball. By default, hold **Key 3** to enter it. While held, the cursor stays still: flick the trackball in any direction to trigger a macOS Spaces & Mission Control shortcut. Use the **Key 2 + Key 3** combo to switch Key 3 hold to the [Rectangle](#rectangle-window-management-gestures-hold-key-3) gestures instead.
+This layer emulates the macOS **three-finger trackpad gestures** with the trackball. By default, hold **Key 3** to enter it. While held, the cursor stays still: flick the trackball in any direction to trigger a macOS Spaces & Mission Control shortcut. Use the **Key 2 + Key 3** combo to switch Key 3 hold to the [Window](#window-gestures-hold-key-3) gestures instead.
 
 | Trackball | Action | Shortcut |
 |:-|:-|:-|
@@ -58,16 +58,16 @@ This layer emulates the macOS **three-finger trackpad gestures** with the trackb
 | ← | Move one Space right | ⌃→ |
 | → | Move one Space left | ⌃← |
 
-### Rectangle window-management gestures (hold Key 3)
+### Window gestures (hold Key 3)
 
-<img width="800" alt="Hold Key 3 and flick the trackball: up = Maximize (⌃⌥⏎), down = Restore (⌃⌥⌫), left = Left 1/3 (⌃⌥D), right = Right 2/3 (⌃⌥T)" src="images/key3-rectangle-gestures.svg" />
+<img width="800" alt="Hold Key 3 and flick the trackball: up = Previous tab (⌃⇧⇥), down = Next tab (⌃⇥), left = Left 1/3 (⌃⌥D), right = Right 2/3 (⌃⌥T)" src="images/key3-window-gestures.svg" />
 
-With Rectangle override on (toggled by the **Key 2 + Key 3** combo), Key 3 hold enters this layer instead of Spaces & Mission Control. While held, the cursor stays still: flick the trackball in any direction to trigger a [Rectangle.app](https://rectangleapp.com/) shortcut.
+After the **Key 2 + Key 3** switch, Key 3 hold enters this layer instead of the Desktop layer (press the combo again to switch back). While held, the cursor stays still: flick left or right for a [Rectangle.app](https://rectangleapp.com/) window-split shortcut, or up or down to switch browser tabs.
 
 | Trackball | Action | Shortcut |
 |:-|:-|:-|
-| ↑ | Maximize | ⌃⌥⏎ |
-| ↓ | Restore | ⌃⌥⌫ |
+| ↑ | Previous tab | ⌃⇧⇥ |
+| ↓ | Next tab | ⌃⇥ |
 | ← | Left 1/3 | ⌃⌥D |
 | → | Right 2/3 | ⌃⌥T |
 
@@ -98,7 +98,7 @@ The scaler takes a **multiplier** and a **divisor**, scaling each scroll value a
 
 Here `zip_x_scaler` and `zip_scroll_scaler` are ZMK [scaler](https://zmk.dev/docs/keymaps/input-processors/scaler) processors and `zip_xy_to_scroll_mapper` is a [code mapper](https://zmk.dev/docs/keymaps/input-processors/code-mapper), while `zip_scroll_gesture` comes from the [`zmk-mouse-gesture`](https://github.com/kot149/zmk-mouse-gesture) module.
 
-**Gesture sensitivity** is the [`stroke-size`](https://github.com/kot149/zmk-mouse-gesture#options) property on each gesture node (`zip_scroll_gesture`, `zip_desktop_gesture`, and `zip_rectangle_gesture`) in [`kimiboard.keymap`](config/boards/shields/kimi/kimiboard.keymap):
+**Gesture sensitivity** is the [`stroke-size`](https://github.com/kot149/zmk-mouse-gesture#options) property on each gesture node (`zip_scroll_gesture`, `zip_desktop_gesture`, and `zip_window_gesture`) in [`kimiboard.keymap`](config/boards/shields/kimi/kimiboard.keymap):
 
 ```dts
 stroke-size = <100>;  // default: 200
@@ -141,7 +141,7 @@ timeout-ms = <50>;  // default: 50
 
 Both keys of a combo must be pressed within this many milliseconds to register together. Lower it to make accidental combos less likely (the two keys must be hit closer to simultaneously); raise it if a combo is hard to trigger reliably.
 
-Key 3's hold layer defaults to Spaces & Mission Control. The Key 2 + Key 3 combo toggles it to Rectangle. See [Default Keymap](#default-keymap) for details.
+Key 3's hold layer defaults to Desktop. The Key 2 + Key 3 combo switches it to Window. See [Default Keymap](#default-keymap) for details.
 
 ## Building and Flashing the Firmware
 
@@ -231,12 +231,6 @@ devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc 'west update'
 ```
 
 `west update` clones the Zephyr tree and all module dependencies, so it can take several minutes (sometimes longer on a slow connection). This is expected — let it run to completion.
-
-If `west init` reports that the workspace is already initialized and you intentionally want to reinitialize it, run this first. It removes only the `.west` metadata; it does not delete the checked-out source trees. Then run the `west init` and `west update` commands above again:
-
-```bash
-devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc 'rm -rf .west'
-```
 
 #### Build
 

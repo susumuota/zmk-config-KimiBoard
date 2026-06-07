@@ -10,8 +10,8 @@
 #define DEFAULT 0
 #define SCROLL 1
 #define DESKTOP 2
-#define RECTANGLE_OVERRIDE 3
-#define RECTANGLE 4
+#define WINDOW_MODE 3
+#define WINDOW 4
 
 / {
     keymap {
@@ -35,13 +35,13 @@
             >;
         };
 
-        rectangle_override_layer {
+        window_mode_layer {
             bindings = <
-                &trans  &trans  &trans  &mo_mkp RECTANGLE RCLK
+                &trans  &trans  &trans  &mo_mkp WINDOW RCLK
             >;
         };
 
-        rectangle_layer {
+        window_layer {
             bindings = <
                 &trans  &trans  &trans  &trans
             >;
@@ -57,8 +57,8 @@
             timeout-ms = <50>;  // default: 50
         };
 
-        combo_rectangle_override {
-            bindings = <&tog RECTANGLE_OVERRIDE>;
+        combo_window_mode {
+            bindings = <&tog WINDOW_MODE>;
             key-positions = <2 3>;
             timeout-ms = <50>;  // default: 50
         };
@@ -125,8 +125,8 @@
         };
     };
 
-    // Rectangle window-management gestures on the right button hold
-    zip_rectangle_gesture: zip_rectangle_gesture {
+    // Window-split (Rectangle.app, left/right) + browser tab switching (up/down) on the right button hold
+    zip_window_gesture: zip_window_gesture {
         compatible = "zmk,input-processor-mouse-gesture";
         #input-processor-cells = <0>;
         stroke-size = <100>;  // default: 200
@@ -144,14 +144,14 @@
             bindings = <&kp LC(LA(T))>;
         };
 
-        maximize {
+        tab_previous {
             pattern = <GESTURE_UP>;
-            bindings = <&kp LC(LA(RET))>;
+            bindings = <&kp LC(LS(TAB))>;
         };
 
-        restore {
+        tab_next {
             pattern = <GESTURE_DOWN>;
-            bindings = <&kp LC(LA(BSPC))>;
+            bindings = <&kp LC(TAB)>;
         };
     };
 };
@@ -168,9 +168,9 @@
         input-processors = <&zip_desktop_gesture &zip_x_scaler 0 1 &zip_y_scaler 0 1>;
     };
 
-    rectangle {
-        layers = <RECTANGLE>;
+    window {
+        layers = <WINDOW>;
         // recognize gesture first, then zero movement so the cursor stays put
-        input-processors = <&zip_rectangle_gesture &zip_x_scaler 0 1 &zip_y_scaler 0 1>;
+        input-processors = <&zip_window_gesture &zip_x_scaler 0 1 &zip_y_scaler 0 1>;
     };
 };
