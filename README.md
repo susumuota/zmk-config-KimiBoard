@@ -157,26 +157,28 @@ GitHub Actions builds the firmware automatically on every push and pull request,
 
 Based on the ZMK [Container Setup](https://zmk.dev/docs/development/local-toolchain/setup/container) and [Build & Flash](https://zmk.dev/docs/development/build-flash) documentation.
 
-#### Prerequisites
+#### Install the prerequisites
+
+Install the tools this guide relies on with [Homebrew](https://brew.sh/): [`colima`](https://github.com/abiosoft/colima) (the Docker runtime), [`docker`](https://www.docker.com/) (the CLI), and [`devcontainer`](https://github.com/devcontainers/cli) (the Dev Container CLI).
 
 ```bash
 brew install colima docker devcontainer
 ```
 
-#### Setup
+#### Prepare the sources
 
-First create a workspace directory and `cd` into it. **All commands in the Setup, Build, and Flash sections are run from this directory**, which holds `zmk-config-KimiBoard`, `zmk`, and `zmk-modules` as siblings.
+First, create a workspace directory, `cd` into it, and clone this repository. **All commands below are run from the workspace directory**, which holds `zmk-config-KimiBoard`, `zmk`, and `zmk-modules` as siblings.
 
 ```bash
 mkdir -p kimiboard-workspace
 cd kimiboard-workspace
+
+git clone https://github.com/susumuota/zmk-config-KimiBoard.git
 ```
 
-Then clone this repository and read its pinned SHAs into shell variables. These SHAs are the single source of truth: they live as the `revision` values of the `zmk`, `zmk-rgbled-widget`, and `zmk-mouse-gesture` projects in [`config/west.yml`](config/west.yml).
+Next, read this config's pinned SHAs into shell variables so the rest of the setup checks out exactly those commits. The `awk` commands below pull each SHA from the `revision` value of the matching project in [`config/west.yml`](config/west.yml), where this config keeps them.
 
 ```bash
-git clone https://github.com/susumuota/zmk-config-KimiBoard.git
-
 ZMK_REV=$(awk '/name: zmk$/{f=1} f&&/revision:/{print $2; exit}' zmk-config-KimiBoard/config/west.yml)
 RGBLED_REV=$(awk '/name: zmk-rgbled-widget/{f=1} f&&/revision:/{print $2; exit}' zmk-config-KimiBoard/config/west.yml)
 MOUSEGESTURE_REV=$(awk '/name: zmk-mouse-gesture/{f=1} f&&/revision:/{print $2; exit}' zmk-config-KimiBoard/config/west.yml)
@@ -186,7 +188,7 @@ echo "RGBLED_REV: $RGBLED_REV"
 echo "MOUSEGESTURE_REV: $MOUSEGESTURE_REV"
 ```
 
-Then clone the ZMK firmware source and extra modules, checking out the same pinned commits so local builds match CI:
+Then, clone the ZMK firmware source and extra modules, checking out the same pinned commits so local builds match CI:
 
 ```bash
 git clone https://github.com/zmkfirmware/zmk.git
@@ -198,6 +200,8 @@ git clone https://github.com/caksoylar/zmk-rgbled-widget.git zmk-modules/zmk-rgb
 git clone https://github.com/kot149/zmk-mouse-gesture.git zmk-modules/zmk-mouse-gesture
 (cd zmk-modules/zmk-mouse-gesture && git checkout "$MOUSEGESTURE_REV")
 ```
+
+#### Start the build container
 
 Start colima and create Docker volumes to mount the config and modules into the container. The `colima start` flags allocate 2 CPUs (`-c 2`), 4 GB RAM (`-m 4`), and a 100 GB disk (`-d 100`), and use the macOS `vz` virtualization backend (`-t vz`).
 
@@ -220,7 +224,9 @@ devcontainer up --workspace-folder "$(pwd)/zmk"
 docker ps -a
 ```
 
-Initialize the Zephyr workspace from the host. You only need to do this once, after creating the container workspace:
+#### Initialize the Zephyr workspace
+
+Run this once from the host, after creating the container workspace:
 
 ```bash
 devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc 'west init -l app/'
@@ -232,7 +238,7 @@ devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc 'west update'
 
 `west update` clones the Zephyr tree and all module dependencies, so it can take several minutes (sometimes longer on a slow connection). This is expected — let it run to completion.
 
-#### Build
+#### Build the firmware
 
 Run the local build script from the host with `devcontainer exec`. [`scripts/build-local.py`](scripts/build-local.py) locally emulates ZMK's [reusable user config build workflow](https://github.com/zmkfirmware/zmk/blob/main/.github/workflows/build-user-config.yml). It reads [`build.yaml`](build.yaml), runs each build inside the container, and writes the resulting `.uf2` files to `firmware/` using the same artifact names as GitHub Actions. For fallback artifact names, spaces are replaced with underscores.
 
@@ -251,7 +257,7 @@ Because builds are incremental, a few changes need a clean (pristine) rebuild to
 devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc 'rm -rf /tmp/zmk-build'
 ```
 
-#### Flash
+#### Flash the firmware
 
 Put the board into bootloader mode (double-tap reset), then copy the firmware to the board. The `-X` flag is macOS only and prevents extended attribute errors with UF2 mass storage.
 
@@ -267,7 +273,7 @@ Put the board into bootloader mode again, then flash the main firmware:
 cp -X zmk-config-KimiBoard/firmware/kimiboard_rgbled_adapter-xiao_ble__zmk-zmk.uf2 /Volumes/XIAO-SENSE/
 ```
 
-#### Cleanup
+#### Stop the build container
 
 Stop and remove the Dev Container:
 
