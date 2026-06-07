@@ -15,6 +15,9 @@ import yaml
 DEFAULT_ROOT = Path("/workspaces/zmk-config")
 DEFAULT_ZMK_APP = Path("/workspaces/zmk/app")
 DEFAULT_EXTRA_MODULES = "/workspaces/zmk-modules/zmk-rgbled-widget;/workspaces/zmk-modules/zmk-mouse-gesture"
+# Build on the VM-internal filesystem, not the virtiofs-mounted source tree, so
+# the build is not bottlenecked by host<->VM filesystem I/O latency.
+DEFAULT_BUILD_ROOT = Path("/tmp/zmk-build")
 
 
 def load_build_matrix(path: Path) -> list[dict[str, Any]]:
@@ -43,7 +46,7 @@ def default_artifact_name(entry: dict[str, Any]) -> str:
 def build_command(
     entry: dict[str, Any], zmk_app: Path, config_dir: Path, build_dir: Path, extra_modules: str
 ) -> list[str]:
-    cmd = ["west", "build", "-p", "-s", str(zmk_app), "-d", str(build_dir), "-b", str(entry["board"])]
+    cmd = ["west", "build", "-s", str(zmk_app), "-d", str(build_dir), "-b", str(entry["board"])]
 
     if snippet := entry.get("snippet"):
         cmd.extend(["-S", str(snippet)])
@@ -66,6 +69,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Build local ZMK firmware artifacts from build.yaml.")
     parser.add_argument("--root", type=Path, default=DEFAULT_ROOT)
     parser.add_argument("--zmk-app", type=Path, default=DEFAULT_ZMK_APP)
+    parser.add_argument("--build-root", type=Path, default=DEFAULT_BUILD_ROOT)
     parser.add_argument("--extra-modules", default=DEFAULT_EXTRA_MODULES)
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
@@ -80,7 +84,7 @@ def main() -> None:
 
     for entry in entries:
         artifact_name = str(entry.get("artifact-name") or default_artifact_name(entry))
-        build_dir = args.zmk_app / "build" / "local" / artifact_name
+        build_dir = args.build_root / artifact_name
         dest = output_dir / f"{artifact_name}.uf2"
 
         cmd = build_command(entry, args.zmk_app, config_dir, build_dir, args.extra_modules)

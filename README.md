@@ -249,6 +249,14 @@ devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc \
 
 To inspect the generated `west build` commands without building, add `--dry-run`.
 
+Each target builds incrementally in its own directory under `/tmp/zmk-build/` inside the container, so rebuilding after a keymap or config edit only recompiles what changed. This build directory lives on the container's filesystem rather than the virtiofs-mounted source tree, which keeps the build from being bottlenecked by host I/O. To put the build elsewhere, pass `--build-root <path>`.
+
+Because builds are incremental, a few changes need a clean (pristine) rebuild to be picked up reliably: switching board or shield, bumping the pinned dependencies (`west update`), adding or removing source/overlay files, or recovering from an interrupted build. Editing the contents of `.keymap`, `.conf`, or `.overlay` files does **not** require this. To force a clean build, delete the build directory first:
+
+```bash
+devcontainer exec --workspace-folder "$(pwd)/zmk" bash -lc 'rm -rf /tmp/zmk-build'
+```
+
 #### Flash
 
 Put the board into bootloader mode (double-tap reset), then copy the firmware to the board. The `-X` flag is macOS only and prevents extended attribute errors with UF2 mass storage.
