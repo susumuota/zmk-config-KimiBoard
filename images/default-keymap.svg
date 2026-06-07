@@ -35,12 +35,12 @@
   <!-- Tap row (one pill per key column) -->
   <rect x="156" y="240" width="88" height="38" rx="19" fill="#f1f1f1" stroke="#d1d1d1" stroke-width="2"/>
   <rect x="258" y="240" width="108" height="38" rx="19" fill="#f1f1f1" stroke="#d1d1d1" stroke-width="2"/>
-  <rect x="388" y="240" width="136" height="38" rx="19" fill="#f1f1f1" stroke="#d1d1d1" stroke-width="2"/>
-  <rect x="540" y="240" width="120" height="38" rx="19" fill="#f1f1f1" stroke="#d1d1d1" stroke-width="2"/>
+  <rect x="396" y="240" width="120" height="38" rx="19" fill="#f1f1f1" stroke="#d1d1d1" stroke-width="2"/>
+  <rect x="532" y="240" width="136" height="38" rx="19" fill="#f1f1f1" stroke="#d1d1d1" stroke-width="2"/>
   <text x="200" y="265" text-anchor="middle" font-size="16.5" font-weight="600" fill="#4a4a4a">Switch BT</text>
   <text x="312" y="265" text-anchor="middle" font-size="19.5" font-weight="600" fill="#4a4a4a">Left Click</text>
-  <text x="456" y="265" text-anchor="middle" font-size="19.5" font-weight="600" fill="#4a4a4a">Middle Click</text>
-  <text x="600" y="265" text-anchor="middle" font-size="19.5" font-weight="600" fill="#4a4a4a">Right Click</text>
+  <text x="456" y="265" text-anchor="middle" font-size="19.5" font-weight="600" fill="#4a4a4a">Right Click</text>
+  <text x="600" y="265" text-anchor="middle" font-size="19.5" font-weight="600" fill="#4a4a4a">Middle Click</text>
 
   <!-- Hold row (only Key 2 and Key 3 have holds) -->
   <rect x="406" y="296" width="100" height="38" rx="19" fill="#4a90d9"/>

@@ -12,7 +12,7 @@ This ZMK config is a fork of [sirocominfo/zmk-config-KimiBoard](https://github.c
 
 ## Default Keymap
 
-<img width="800" alt="Default keymap: Key 0 tap = Switch BT, Key 1 tap = Left click, Key 2 tap = Middle click / hold = Scroll layer, Key 3 tap = Right click / hold = Spaces & Mission Control or Rectangle layer, trackball moves the pointer; Key 0 + Key 3 clears Bluetooth pairing; Key 2 + Key 3 toggles Rectangle override" src="images/default-keymap.svg" />
+<img width="800" alt="Default keymap: Key 0 tap = Switch BT, Key 1 tap = Left click, Key 2 tap = Right click / hold = Scroll layer, Key 3 tap = Middle click / hold = Spaces & Mission Control or Rectangle layer, trackball moves the pointer; Key 0 + Key 3 clears Bluetooth pairing; Key 2 + Key 3 toggles Rectangle override" src="images/default-keymap.svg" />
 
 Each key has a tap action, and Keys 2 and 3 are hold-taps (200 ms) that add a hold action: a quick tap sends a mouse click, while holding activates a momentary gesture layer. In the diagram above, white pills are tap actions and blue pills are hold actions. On the default layer, the trackball moves the pointer.
 
@@ -20,8 +20,8 @@ Each key has a tap action, and Keys 2 and 3 are hold-taps (200 ms) that add a ho
 |:-|:-|:-|
 | 0 | Switch Bluetooth connection (cycle through BT1 → BT2 → BT3 → BT1...) | - |
 | 1 | Left click | - |
-| 2 | Middle click | Scroll & Navigate gesture layer |
-| 3 | Right click | Spaces & Mission Control gesture layer, or Rectangle gesture layer when Rectangle override is on |
+| 2 | Right click | Scroll & Navigate gesture layer |
+| 3 | Middle click | Spaces & Mission Control gesture layer, or Rectangle gesture layer when Rectangle override is on |
 
 Pressing two keys together triggers a combo:
 
@@ -119,7 +119,7 @@ After a gesture fires, processing pauses for this many milliseconds before the n
 **Tap actions** are the `default_layer` bindings in [`kimiboard.keymap`](config/boards/shields/kimi/kimiboard.keymap), listed left to right as Keys 0 to 3:
 
 ```dts
-&bt BT_NXT  &mkp LCLK  &mo_mkp SCROLL MCLK  &mo_mkp DESKTOP RCLK
+&bt BT_NXT  &mkp LCLK  &mo_mkp SCROLL RCLK  &mo_mkp DESKTOP MCLK
 ```
 
 Keys 0 and 1 are plain taps: Key 0 cycles the [Bluetooth](https://zmk.dev/docs/keymaps/behaviors/bluetooth) connection (`&bt`) and Key 1 sends a [mouse click](https://zmk.dev/docs/keymaps/behaviors/mouse-emulation) (`&mkp`). Keys 2 and 3 use the `mo_mkp` [hold-tap](https://zmk.dev/docs/keymaps/behaviors/hold-tap), where the first parameter is the [**hold** layer](https://zmk.dev/docs/keymaps/behaviors/layers) and the second is the **tap** mouse click. For example, swap `LCLK` for `RCLK` to make Key 1 a right click, or change `DESKTOP` to set which layer Key 3 holds into.
